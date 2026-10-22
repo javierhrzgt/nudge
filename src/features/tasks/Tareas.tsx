@@ -8,6 +8,8 @@ import {
   Badge,
   Group,
   Progress,
+  Center,
+  Loader,
 } from "@mantine/core";
 import { calculatePercentage } from "../../lib/progress";
 
@@ -35,7 +37,12 @@ export default function Tareas({ userId }: Readonly<TareasProps>) {
     },
   });
 
-  if (isPending) return <Text>Cargando...</Text>;
+  if (isPending)
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    );
   if (error) return <Text>{error.message}</Text>;
   if (data.length === 0) return <Text>Aún no tienes tareas</Text>;
 
