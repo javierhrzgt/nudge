@@ -1,7 +1,18 @@
 import type { AgendaDay, Goal, Settings } from "./types";
-import { parseISO, addDays, format } from "date-fns";
+import { parseISO, addDays, format, getDay } from "date-fns";
+
+function nextWorkDay(from: Date, workDays: number[]): Date {
+  let date = from;
+  while (!workDays.includes(getDay(date))) {
+    date = addDays(date, 1);
+  }
+
+  return date;
+}
 
 export function generarAgenda(goals: Goal[], settings: Settings): AgendaDay[] {
+  if (settings.workDays.length === 0)
+    throw new Error(`No hay días laborales seleccionados`);
   const days: string[][] = [];
   let currentDay: string[] = [];
   let currentMinutes = 0;
@@ -23,9 +34,11 @@ export function generarAgenda(goals: Goal[], settings: Settings): AgendaDay[] {
   }
 
   const startDate = parseISO(settings.startDate);
-  const agenda = days.map((ids, index) => {
-    const date = format(addDays(startDate, index), "yyyy-MM-dd");
-    return { date, goalIds: ids };
-  });
-  return agenda;
+  let cursor = nextWorkDay(startDate, settings.workDays);
+  const result: AgendaDay[] = [];
+  for (const ids of days) {
+    result.push({ date: format(cursor, "yyyy-MM-dd"), goalIds: ids });
+    cursor = nextWorkDay(addDays(cursor, 1), settings.workDays);
+  }
+  return result;
 }
