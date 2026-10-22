@@ -1,6 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../lib/supabase";
-import { Text, Stack, Title } from "@mantine/core";
+import {
+  Text,
+  Stack,
+  Title,
+  Center,
+  Loader,
+  Group,
+  Badge,
+} from "@mantine/core";
 
 interface PerfilProps {
   userId: string;
@@ -22,12 +30,19 @@ export default function Perfil({ userId }: Readonly<PerfilProps>) {
     },
   });
 
-  if (isPending) return <Text>Cargando...</Text>;
+  if (isPending)
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    );
   if (error) return <Text>{error.message}</Text>;
   return (
     <Stack>
-      <Title>{data.display_name}</Title>
-      <Text>{data.role}</Text>
+      <Group>
+        <Title>{data.display_name}</Title>
+        <Badge>{data.role}</Badge>
+      </Group>
     </Stack>
   );
 }
