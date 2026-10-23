@@ -34,6 +34,7 @@ describe("generarAgenda", () => {
       { date: "2026-10-27", goalIds: ["g3", "g4"] },
     ]);
   });
+
   it("salta los dias que no son de trabajo", () => {
     const goals: Goal[] = [
       makeGoal("g1", { position: 1 }),
@@ -53,5 +54,36 @@ describe("generarAgenda", () => {
       { date: "2026-10-30", goalIds: ["g1", "g2"] },
       { date: "2026-11-02", goalIds: ["g3", "g4"] },
     ]);
+  });
+
+  it("si startDate no es laborable, empieza el siguiente día laboral", () => {
+    const goals: Goal[] = [
+      makeGoal("g1", { position: 1 }),
+      makeGoal("g2", { position: 2 }),
+      makeGoal("g3", { position: 3 }),
+      makeGoal("g4", { position: 4 }),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-31",
+    };
+
+    const result = generarAgenda(goals, settings);
+
+    expect(result).toEqual([
+      { date: "2026-11-02", goalIds: ["g1", "g2"] },
+      { date: "2026-11-03", goalIds: ["g3", "g4"] },
+    ]);
+  });
+  it("valida que workDays no sea vacío []", () => {
+    const goals: Goal[] = [makeGoal("g1", { position: 1 })];
+    const settings: Settings = {
+      workDays: [],
+      dailyMinutes: 60,
+      startDate: "2026-10-31",
+    };
+
+    expect(() => generarAgenda(goals, settings)).toThrow("días laborales");
   });
 });
