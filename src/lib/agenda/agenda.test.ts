@@ -2,37 +2,24 @@ import { describe, it, expect } from "vitest";
 import { generarAgenda } from "./agenda";
 import type { Goal, Settings } from "./types";
 
+function makeGoal(id: string, overrides: Partial<Goal> = {}): Goal {
+  return {
+    id,
+    taskId: "t1",
+    estMinutes: 30,
+    position: 1,
+    completedOn: null,
+    ...overrides,
+  };
+}
+
 describe("generarAgenda", () => {
   it("reparte metas de una tarea según los minutos diarios", () => {
     const goals: Goal[] = [
-      {
-        id: "g1",
-        taskId: "t1",
-        estMinutes: 30,
-        position: 1,
-        completedOn: null,
-      },
-      {
-        id: "g2",
-        taskId: "t1",
-        estMinutes: 30,
-        position: 2,
-        completedOn: null,
-      },
-      {
-        id: "g3",
-        taskId: "t1",
-        estMinutes: 30,
-        position: 3,
-        completedOn: null,
-      },
-      {
-        id: "g4",
-        taskId: "t1",
-        estMinutes: 30,
-        position: 4,
-        completedOn: null,
-      },
+      makeGoal("g1", { position: 1 }),
+      makeGoal("g2", { position: 2 }),
+      makeGoal("g3", { position: 3 }),
+      makeGoal("g4", { position: 4 }),
     ];
     const settings: Settings = {
       workDays: [1, 2, 3, 4, 5],
@@ -49,34 +36,10 @@ describe("generarAgenda", () => {
   });
   it("salta los dias que no son de trabajo", () => {
     const goals: Goal[] = [
-      {
-        id: "g1",
-        taskId: "t1",
-        estMinutes: 30,
-        position: 1,
-        completedOn: null,
-      },
-      {
-        id: "g2",
-        taskId: "t1",
-        estMinutes: 30,
-        position: 2,
-        completedOn: null,
-      },
-      {
-        id: "g3",
-        taskId: "t1",
-        estMinutes: 30,
-        position: 3,
-        completedOn: null,
-      },
-      {
-        id: "g4",
-        taskId: "t1",
-        estMinutes: 30,
-        position: 4,
-        completedOn: null,
-      },
+      makeGoal("g1", { position: 1 }),
+      makeGoal("g2", { position: 2 }),
+      makeGoal("g3", { position: 3 }),
+      makeGoal("g4", { position: 4 }),
     ];
     const settings: Settings = {
       workDays: [1, 2, 3, 4, 5],
