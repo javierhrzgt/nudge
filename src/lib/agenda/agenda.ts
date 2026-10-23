@@ -41,11 +41,12 @@ export function generarAgenda(tasks: Task[], settings: Settings): AgendaDay[] {
   const startDate = parseISO(settings.startDate);
   let cursor = nextWorkDay(startDate, settings.workDays);
   const result: AgendaDay[] = [];
-  const sortedTasks = [...tasks].sort((a, b) => a.position - b.position);
+  const sortedTasks = tasks.toSorted((a, b) => a.position - b.position);
 
   for (const task of sortedTasks) {
     const pending = task.goals.filter((g) => g.completedOn === null);
-    const days = groupIntoDays(pending, settings.dailyMinutes);
+    const sortedGoals = pending.toSorted((a, b) => a.position - b.position);
+    const days = groupIntoDays(sortedGoals, settings.dailyMinutes);
     for (const ids of days) {
       result.push({ date: format(cursor, "yyyy-MM-dd"), goalIds: ids });
       cursor = nextWorkDay(addDays(cursor, 1), settings.workDays);

@@ -192,4 +192,21 @@ describe("generarAgenda", () => {
       { date: "2026-10-27", goalIds: ["g2"] },
     ]);
   });
+  it("las metas se procesan por position, no por el orden de la lista", () => {
+    const tasks: Task[] = [
+      makeTask("t2", [
+        makeGoal("g2", { estMinutes: 30, position: 2 }),
+        makeGoal("g1", { estMinutes: 30, position: 1 }),
+      ]),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-26",
+    };
+
+    const result = generarAgenda(tasks, settings);
+
+    expect(result).toEqual([{ date: "2026-10-26", goalIds: ["g1", "g2"] }]);
+  });
 });
