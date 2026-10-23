@@ -102,4 +102,36 @@ describe("generarAgenda", () => {
 
     expect(result).toEqual([{ date: "2026-10-26", goalIds: ["g2", "g3"] }]);
   });
+  it("devuelve lista vacía cuando goals es []", () => {
+    const goals: Goal[] = [];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-26",
+    };
+
+    const result = generarAgenda(goals, settings);
+
+    expect(result).toEqual([]);
+  });
+  it("distribuye cuando hay una meta mas grande que el tope diario", () => {
+    const goals: Goal[] = [
+      makeGoal("g1", { position: 1 }),
+      makeGoal("g2", { position: 2, estMinutes: 90 }),
+      makeGoal("g3", { position: 3 }),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-26",
+    };
+
+    const result = generarAgenda(goals, settings);
+
+    expect(result).toEqual([
+      { date: "2026-10-26", goalIds: ["g1"] },
+      { date: "2026-10-27", goalIds: ["g2"] },
+      { date: "2026-10-28", goalIds: ["g3"] },
+    ]);
+  });
 });
