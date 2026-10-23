@@ -41,8 +41,9 @@ export function generarAgenda(tasks: Task[], settings: Settings): AgendaDay[] {
   const startDate = parseISO(settings.startDate);
   let cursor = nextWorkDay(startDate, settings.workDays);
   const result: AgendaDay[] = [];
+  const sortedTasks = [...tasks].sort((a, b) => a.position - b.position);
 
-  for (const task of tasks) {
+  for (const task of sortedTasks) {
     const pending = task.goals.filter((g) => g.completedOn === null);
     const days = groupIntoDays(pending, settings.dailyMinutes);
     for (const ids of days) {

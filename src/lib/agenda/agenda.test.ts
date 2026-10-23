@@ -156,4 +156,40 @@ describe("generarAgenda", () => {
       { date: "2026-10-28", goalIds: ["g3"] },
     ]);
   });
+  it("dos tareas no comparten dia", () => {
+    const tasks: Task[] = [
+      makeTask("t1", [makeGoal("g1", { estMinutes: 30 })]),
+      makeTask("t2", [makeGoal("g2", { estMinutes: 30 })]),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-26",
+    };
+
+    const result = generarAgenda(tasks, settings);
+
+    expect(result).toEqual([
+      { date: "2026-10-26", goalIds: ["g1"] },
+      { date: "2026-10-27", goalIds: ["g2"] },
+    ]);
+  });
+  it("las tareas se procesan por position, no por el orden de la lista", () => {
+    const tasks: Task[] = [
+      makeTask("t2", [makeGoal("g2", { estMinutes: 30 })], { position: 2 }),
+      makeTask("t1", [makeGoal("g1", { estMinutes: 30 })], { position: 1 }),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-26",
+    };
+
+    const result = generarAgenda(tasks, settings);
+
+    expect(result).toEqual([
+      { date: "2026-10-26", goalIds: ["g1"] },
+      { date: "2026-10-27", goalIds: ["g2"] },
+    ]);
+  });
 });
