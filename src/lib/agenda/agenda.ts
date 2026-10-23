@@ -17,7 +17,8 @@ export function generarAgenda(goals: Goal[], settings: Settings): AgendaDay[] {
   let currentDay: string[] = [];
   let currentMinutes = 0;
 
-  for (const goal of goals) {
+  const pending = goals.filter((g) => g.completedOn === null);
+  for (const goal of pending) {
     if (
       currentDay.length > 0 &&
       currentMinutes + goal.estMinutes > settings.dailyMinutes

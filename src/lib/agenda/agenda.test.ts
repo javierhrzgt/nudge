@@ -86,4 +86,20 @@ describe("generarAgenda", () => {
 
     expect(() => generarAgenda(goals, settings)).toThrow("días laborales");
   });
+  it("ignora las metas ya completadas", () => {
+    const goals: Goal[] = [
+      makeGoal("g1", { position: 1, completedOn: "2026-10-20" }),
+      makeGoal("g2", { position: 2 }),
+      makeGoal("g3", { position: 3 }),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-26",
+    };
+
+    const result = generarAgenda(goals, settings);
+
+    expect(result).toEqual([{ date: "2026-10-26", goalIds: ["g2", "g3"] }]);
+  });
 });
