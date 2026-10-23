@@ -1,4 +1,4 @@
-import type { AgendaDay, Goal, Settings } from "./types";
+import type { AgendaDay, Goal, Settings, Task } from "./types";
 import { parseISO, addDays, format, getDay } from "date-fns";
 
 function nextWorkDay(from: Date, workDays: number[]): Date {
@@ -10,18 +10,15 @@ function nextWorkDay(from: Date, workDays: number[]): Date {
   return date;
 }
 
-export function generarAgenda(goals: Goal[], settings: Settings): AgendaDay[] {
-  if (settings.workDays.length === 0)
-    throw new Error(`No hay días laborales seleccionados`);
+function groupIntoDays(goals: Goal[], dailyMinutes: number): string[][] {
   const days: string[][] = [];
   let currentDay: string[] = [];
   let currentMinutes = 0;
 
-  const pending = goals.filter((g) => g.completedOn === null);
-  for (const goal of pending) {
+  for (const goal of goals) {
     if (
       currentDay.length > 0 &&
-      currentMinutes + goal.estMinutes > settings.dailyMinutes
+      currentMinutes + goal.estMinutes > dailyMinutes
     ) {
       days.push(currentDay);
       currentDay = [];
@@ -34,12 +31,24 @@ export function generarAgenda(goals: Goal[], settings: Settings): AgendaDay[] {
     days.push(currentDay);
   }
 
+  return days;
+}
+
+export function generarAgenda(tasks: Task[], settings: Settings): AgendaDay[] {
+  if (settings.workDays.length === 0)
+    throw new Error(`No hay días laborales seleccionados`);
+
   const startDate = parseISO(settings.startDate);
   let cursor = nextWorkDay(startDate, settings.workDays);
   const result: AgendaDay[] = [];
-  for (const ids of days) {
-    result.push({ date: format(cursor, "yyyy-MM-dd"), goalIds: ids });
-    cursor = nextWorkDay(addDays(cursor, 1), settings.workDays);
+
+  for (const task of tasks) {
+    const pending = task.goals.filter((g) => g.completedOn === null);
+    const days = groupIntoDays(pending, settings.dailyMinutes);
+    for (const ids of days) {
+      result.push({ date: format(cursor, "yyyy-MM-dd"), goalIds: ids });
+      cursor = nextWorkDay(addDays(cursor, 1), settings.workDays);
+    }
   }
   return result;
 }
