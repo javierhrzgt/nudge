@@ -1,13 +1,13 @@
 import type { Task } from "../../lib/agenda/types";
 
-interface GoalRow {
+export interface GoalRow {
   id: string;
   est_minutes: number;
   position: number;
   completed_on: string | null;
 }
 
-interface TaskRow {
+export interface TaskRow {
   id: string;
   position: number;
   goals: GoalRow[];
