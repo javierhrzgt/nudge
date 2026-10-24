@@ -47,6 +47,7 @@ export function generarAgenda(
 
   const startDate = max([parseISO(settings.startDate), parseISO(activeDay)]);
   let cursor = nextWorkDay(startDate, settings.workDays);
+  const cursorIsToday = format(cursor, "yyyy-MM-dd") === activeDay;
   const result: AgendaDay[] = [];
   const sortedTasks = tasks.toSorted((a, b) => a.position - b.position);
 
@@ -56,11 +57,13 @@ export function generarAgenda(
     (acc, cur) => acc + cur.estMinutes,
     0,
   );
-  let firstDayBudget =
-    format(cursor, "yyyy-MM-dd") === activeDay
-      ? settings.dailyMinutes - minutesCompleted
-      : settings.dailyMinutes;
-
+  let firstDayBudget = cursorIsToday
+    ? settings.dailyMinutes - minutesCompleted
+    : settings.dailyMinutes;
+  if (cursorIsToday && firstDayBudget <= 0) {
+    cursor = nextWorkDay(addDays(cursor, 1), settings.workDays);
+    firstDayBudget = settings.dailyMinutes;
+  }
   for (const task of sortedTasks) {
     const pending = task.goals.filter((g) => g.completedOn === null);
     const sortedGoals = pending.toSorted((a, b) => a.position - b.position);
