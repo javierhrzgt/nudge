@@ -339,4 +339,30 @@ describe("generarAgenda", () => {
 
     expect(result).toEqual([{ date: "2026-11-02", goalIds: ["g1"] }]);
   });
+  it("una meta completada ayer no descuenta del presupuesto de hoy", () => {
+    const tasks: Task[] = [
+      makeTask(
+        "t1",
+        [
+          makeGoal("g0", {
+            estMinutes: 60,
+            position: 1,
+            completedOn: "2026-10-27",
+          }),
+          makeGoal("g1", { estMinutes: 30, position: 2 }),
+          makeGoal("g2", { estMinutes: 30, position: 3 }),
+        ],
+        { position: 1 },
+      ),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-01",
+    };
+
+    const result = generarAgenda(tasks, settings, "2026-10-28");
+
+    expect(result).toEqual([{ date: "2026-10-28", goalIds: ["g1", "g2"] }]);
+  });
 });
