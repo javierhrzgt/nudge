@@ -1,5 +1,5 @@
 import type { AgendaDay, Goal, Settings, Task } from "./types";
-import { parseISO, addDays, format, getDay } from "date-fns";
+import { parseISO, addDays, format, getDay, max } from "date-fns";
 
 function nextWorkDay(from: Date, workDays: number[]): Date {
   let date = from;
@@ -34,11 +34,15 @@ function groupIntoDays(goals: Goal[], dailyMinutes: number): string[][] {
   return days;
 }
 
-export function generarAgenda(tasks: Task[], settings: Settings): AgendaDay[] {
+export function generarAgenda(
+  tasks: Task[],
+  settings: Settings,
+  activeDay: string,
+): AgendaDay[] {
   if (settings.workDays.length === 0)
     throw new Error(`No hay días laborales seleccionados`);
 
-  const startDate = parseISO(settings.startDate);
+  const startDate = max([parseISO(settings.startDate), parseISO(activeDay)]);
   let cursor = nextWorkDay(startDate, settings.workDays);
   const result: AgendaDay[] = [];
   const sortedTasks = tasks.toSorted((a, b) => a.position - b.position);

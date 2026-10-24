@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import { generarAgenda } from "./agenda";
 import type { Goal, Settings, Task } from "./types";
 
+const PAST_DAY = "2000-01-01";
+
 function makeGoal(id: string, overrides: Partial<Goal> = {}): Goal {
   return {
     id,
@@ -41,7 +43,7 @@ describe("generarAgenda", () => {
       startDate: "2026-10-26",
     };
 
-    const result = generarAgenda(tasks, settings);
+    const result = generarAgenda(tasks, settings, PAST_DAY);
 
     expect(result).toEqual([
       { date: "2026-10-26", goalIds: ["g1", "g2"] },
@@ -64,7 +66,7 @@ describe("generarAgenda", () => {
       startDate: "2026-10-30",
     };
 
-    const result = generarAgenda(tasks, settings);
+    const result = generarAgenda(tasks, settings, PAST_DAY);
 
     expect(result).toEqual([
       { date: "2026-10-30", goalIds: ["g1", "g2"] },
@@ -87,7 +89,7 @@ describe("generarAgenda", () => {
       startDate: "2026-10-31",
     };
 
-    const result = generarAgenda(tasks, settings);
+    const result = generarAgenda(tasks, settings, PAST_DAY);
 
     expect(result).toEqual([
       { date: "2026-11-02", goalIds: ["g1", "g2"] },
@@ -102,7 +104,9 @@ describe("generarAgenda", () => {
       startDate: "2026-10-31",
     };
 
-    expect(() => generarAgenda(tasks, settings)).toThrow("días laborales");
+    expect(() => generarAgenda(tasks, settings, PAST_DAY)).toThrow(
+      "días laborales",
+    );
   });
   it("ignora las metas ya completadas", () => {
     const tasks: Task[] = [
@@ -118,7 +122,7 @@ describe("generarAgenda", () => {
       startDate: "2026-10-26",
     };
 
-    const result = generarAgenda(tasks, settings);
+    const result = generarAgenda(tasks, settings, PAST_DAY);
 
     expect(result).toEqual([{ date: "2026-10-26", goalIds: ["g2", "g3"] }]);
   });
@@ -130,7 +134,7 @@ describe("generarAgenda", () => {
       startDate: "2026-10-26",
     };
 
-    const result = generarAgenda(tasks, settings);
+    const result = generarAgenda(tasks, settings, PAST_DAY);
 
     expect(result).toEqual([]);
   });
@@ -148,7 +152,7 @@ describe("generarAgenda", () => {
       startDate: "2026-10-26",
     };
 
-    const result = generarAgenda(tasks, settings);
+    const result = generarAgenda(tasks, settings, PAST_DAY);
 
     expect(result).toEqual([
       { date: "2026-10-26", goalIds: ["g1"] },
@@ -167,7 +171,7 @@ describe("generarAgenda", () => {
       startDate: "2026-10-26",
     };
 
-    const result = generarAgenda(tasks, settings);
+    const result = generarAgenda(tasks, settings, PAST_DAY);
 
     expect(result).toEqual([
       { date: "2026-10-26", goalIds: ["g1"] },
@@ -185,7 +189,7 @@ describe("generarAgenda", () => {
       startDate: "2026-10-26",
     };
 
-    const result = generarAgenda(tasks, settings);
+    const result = generarAgenda(tasks, settings, PAST_DAY);
 
     expect(result).toEqual([
       { date: "2026-10-26", goalIds: ["g1"] },
@@ -205,8 +209,22 @@ describe("generarAgenda", () => {
       startDate: "2026-10-26",
     };
 
-    const result = generarAgenda(tasks, settings);
+    const result = generarAgenda(tasks, settings, PAST_DAY);
 
     expect(result).toEqual([{ date: "2026-10-26", goalIds: ["g1", "g2"] }]);
+  });
+  it("la agenda no empieza antes del día activo", () => {
+    const tasks: Task[] = [
+      makeTask("t2", [makeGoal("g1", { estMinutes: 30, position: 1 })]),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-01",
+    };
+
+    const result = generarAgenda(tasks, settings, "2026-10-28");
+
+    expect(result).toEqual([{ date: "2026-10-28", goalIds: ["g1"] }]);
   });
 });
