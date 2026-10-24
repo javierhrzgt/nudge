@@ -1,27 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../../lib/supabase";
 import { Card, Center, Loader, Stack, Text } from "@mantine/core";
-import { mapSettingsRow } from "./mapSettings";
+import { useSettings } from "./useSettings";
 
 interface SettingsProps {
   userId: string;
 }
 
 export default function SettingsCard({ userId }: Readonly<SettingsProps>) {
-  const { data, isPending, error } = useQuery({
-    queryKey: ["settings", userId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("settings")
-        .select("work_days,daily_minutes,start_date,timezone")
-        .eq("user_id", userId)
-        .single();
-
-      if (error) throw new Error(error.message);
-
-      return mapSettingsRow(data);
-    },
-  });
+  const { data, isPending, error } = useSettings(userId);
 
   if (isPending)
     return (
