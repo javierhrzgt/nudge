@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../lib/supabase";
 import { Card, Center, Loader, Stack, Text } from "@mantine/core";
+import { mapSettingsRow } from "./mapSettings";
 
 interface SettingsProps {
   userId: string;
@@ -18,7 +19,7 @@ export default function SettingsCard({ userId }: Readonly<SettingsProps>) {
 
       if (error) throw new Error(error.message);
 
-      return data;
+      return mapSettingsRow(data);
     },
   });
 
@@ -32,10 +33,10 @@ export default function SettingsCard({ userId }: Readonly<SettingsProps>) {
   return (
     <Card>
       <Stack>
-        <Text>{data.daily_minutes}</Text>
-        <Text>{data.start_date}</Text>
+        <Text>{data.dailyMinutes}</Text>
+        <Text>{data.startDate}</Text>
         <Text>{data.timezone}</Text>
-        <Text>{data.work_days.join(", ")}</Text>
+        <Text>{data.workDays.join(", ")}</Text>
       </Stack>
     </Card>
   );
