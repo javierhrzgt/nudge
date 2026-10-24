@@ -227,4 +227,66 @@ describe("generarAgenda", () => {
 
     expect(result).toEqual([{ date: "2026-10-28", goalIds: ["g1"] }]);
   });
+  it("los minutos hechos hoy descuentan del presupuesto de hoy", () => {
+    const tasks: Task[] = [
+      makeTask("t2", [
+        makeGoal("g1", {
+          estMinutes: 30,
+          position: 1,
+          completedOn: "2026-10-28",
+        }),
+        makeGoal("g2", { estMinutes: 30, position: 2 }),
+        makeGoal("g3", { estMinutes: 30, position: 3 }),
+        makeGoal("g4", { estMinutes: 30, position: 4 }),
+      ]),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-01",
+    };
+
+    const result = generarAgenda(tasks, settings, "2026-10-28");
+
+    expect(result).toEqual([
+      { date: "2026-10-28", goalIds: ["g2"] },
+      { date: "2026-10-29", goalIds: ["g3", "g4"] },
+    ]);
+  });
+  it("el descuento es solo para el primer dia de la agenda", () => {
+    const tasks: Task[] = [
+      makeTask(
+        "t1",
+        [
+          makeGoal("g0", {
+            estMinutes: 30,
+            position: 1,
+            completedOn: "2026-10-28",
+          }),
+          makeGoal("g1", { estMinutes: 30, position: 1 }),
+        ],
+        { position: 1 },
+      ),
+      makeTask(
+        "t2",
+        [
+          makeGoal("g2", { estMinutes: 30, position: 1 }),
+          makeGoal("g3", { estMinutes: 30, position: 2 }),
+        ],
+        { position: 2 },
+      ),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-01",
+    };
+
+    const result = generarAgenda(tasks, settings, "2026-10-28");
+
+    expect(result).toEqual([
+      { date: "2026-10-28", goalIds: ["g1"] },
+      { date: "2026-10-29", goalIds: ["g2", "g3"] },
+    ]);
+  });
 });

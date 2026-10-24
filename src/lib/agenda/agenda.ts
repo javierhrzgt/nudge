@@ -10,19 +10,22 @@ function nextWorkDay(from: Date, workDays: number[]): Date {
   return date;
 }
 
-function groupIntoDays(goals: Goal[], dailyMinutes: number): string[][] {
+function groupIntoDays(
+  goals: Goal[],
+  dailyMinutes: number,
+  firstDayBudget: number,
+): string[][] {
   const days: string[][] = [];
   let currentDay: string[] = [];
   let currentMinutes = 0;
+  let limit = firstDayBudget;
 
   for (const goal of goals) {
-    if (
-      currentDay.length > 0 &&
-      currentMinutes + goal.estMinutes > dailyMinutes
-    ) {
+    if (currentDay.length > 0 && currentMinutes + goal.estMinutes > limit) {
       days.push(currentDay);
       currentDay = [];
       currentMinutes = 0;
+      limit = dailyMinutes;
     }
     currentDay.push(goal.id);
     currentMinutes += goal.estMinutes;
@@ -47,10 +50,28 @@ export function generarAgenda(
   const result: AgendaDay[] = [];
   const sortedTasks = tasks.toSorted((a, b) => a.position - b.position);
 
+  const goals = tasks.flatMap((t) => t.goals);
+  const goalsCompleted = goals.filter((g) => g.completedOn === activeDay);
+  const minutesCompleted = goalsCompleted.reduce(
+    (acc, cur) => acc + cur.estMinutes,
+    0,
+  );
+  let firstDayBudget =
+    format(cursor, "yyyy-MM-dd") === activeDay
+      ? settings.dailyMinutes - minutesCompleted
+      : settings.dailyMinutes;
+
   for (const task of sortedTasks) {
     const pending = task.goals.filter((g) => g.completedOn === null);
     const sortedGoals = pending.toSorted((a, b) => a.position - b.position);
-    const days = groupIntoDays(sortedGoals, settings.dailyMinutes);
+    const days = groupIntoDays(
+      sortedGoals,
+      settings.dailyMinutes,
+      firstDayBudget,
+    );
+    if (days.length > 0) {
+      firstDayBudget = settings.dailyMinutes;
+    }
     for (const ids of days) {
       result.push({ date: format(cursor, "yyyy-MM-dd"), goalIds: ids });
       cursor = nextWorkDay(addDays(cursor, 1), settings.workDays);
