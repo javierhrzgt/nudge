@@ -21,3 +21,8 @@ export interface Task {
   position: number;
   goals: Goal[];
 }
+
+export interface OpenSession {
+  startedAt: string;
+  localDate: string;
+}
