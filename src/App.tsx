@@ -1,11 +1,10 @@
-import { Button, Container, Stack, Center, Loader } from "@mantine/core";
+import { Button, Container, Stack, Center, Loader, Card } from "@mantine/core";
 import { supabase } from "./lib/supabase";
 import Perfil from "./features/profile/Perfil";
 import Tareas from "./features/tasks/Tareas";
 import LoginForm from "./features/auth/LoginForm";
 import { useAuth } from "./features/auth/useAuth";
-import SettingsCard from "./features/settings/SettingsCard";
-import CheckSession from "./features/sessions/CheckSession";
+import TodayScreen from "./features/agenda/TodayScreen";
 
 export default function App() {
   const { session, loading } = useAuth();
@@ -23,8 +22,9 @@ export default function App() {
         {session && (
           <Stack>
             <Perfil userId={session.user.id} />
-            <SettingsCard userId={session.user.id} />
-            <CheckSession userId={session.user.id} />
+            <Card>
+              <TodayScreen userId={session.user.id} />
+            </Card>
             <Tareas userId={session.user.id} />
             <Button
               onClick={() => {
