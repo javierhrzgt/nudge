@@ -4,6 +4,10 @@ import { useOpenSession } from "./useOpenSession";
 import { useStartSession } from "./useStartSession";
 import { useState } from "react";
 import FinishSessionModal from "./FinishSessionModal";
+import {
+  ABANDONED_AFTER_HOURS,
+  isAbandoned,
+} from "../../lib/agenda/isAbandoned";
 
 interface StartSessionButtonProps {
   userId: string;
@@ -24,10 +28,17 @@ export default function StartSessionButton({
   const timezone = settings.data.timezone;
   const session = openSession.data;
 
-  if (session)
+  if (session) {
+    const sessionAbandoned = isAbandoned(new Date(), session);
     return (
       <Stack>
-        <Text>Sesión en curso</Text>
+        {sessionAbandoned ? (
+          <Alert color={"yellow"}>
+            Esta sesión lleva abierta más de {ABANDONED_AFTER_HOURS} horas
+          </Alert>
+        ) : (
+          <Text>Sesión en curso</Text>
+        )}
         <Button onClick={() => setModalSessionId(session.id)}>
           Terminar sesión
         </Button>
@@ -40,6 +51,7 @@ export default function StartSessionButton({
         )}
       </Stack>
     );
+  }
 
   return (
     <Stack>

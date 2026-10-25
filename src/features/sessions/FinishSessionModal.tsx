@@ -21,15 +21,23 @@ interface ModalProps {
   onClose: () => void;
 }
 
+const MAX_DURATION_MINUTES = 1440;
+
 export default function FinishSessionModal({
   session,
   userId,
   onClose,
 }: Readonly<ModalProps>) {
   const [duration, setDuration] = useState<number | string>(() =>
-    Math.max(1, differenceInMinutes(new Date(), parseISO(session.startedAt))),
+    Math.min(
+      MAX_DURATION_MINUTES,
+      Math.max(1, differenceInMinutes(new Date(), parseISO(session.startedAt))),
+    ),
   );
-  const isValid = typeof duration === "number" && duration >= 1;
+  const isValid =
+    typeof duration === "number" &&
+    duration >= 1 &&
+    duration <= MAX_DURATION_MINUTES;
   const finishSession = useFinishSession(userId);
   const tasksQuery = useTasks(userId);
   const agendaResult = useAgenda(userId);
@@ -59,6 +67,7 @@ export default function FinishSessionModal({
           value={duration}
           onChange={setDuration}
           min={1}
+          max={MAX_DURATION_MINUTES}
           allowDecimal={false}
         />
         {pending.length === 0 ? (
