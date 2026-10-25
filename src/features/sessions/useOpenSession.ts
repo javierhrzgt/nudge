@@ -8,7 +8,7 @@ export function useOpenSession(userId: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("study_sessions")
-        .select("started_at,local_date")
+        .select("id,started_at,local_date")
         .eq("user_id", userId)
         .is("duration_minutes", null)
         .maybeSingle();
