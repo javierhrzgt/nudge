@@ -1,8 +1,6 @@
 import { formatInTimeZone } from "date-fns-tz";
 import type { OpenSession } from "./types";
-import { differenceInMinutes, parseISO } from "date-fns";
-
-export const ABANDONED_AFTER_HOURS = 6;
+import { isAbandoned } from "./isAbandoned";
 
 export function activeDay(
   now: Date,
@@ -14,10 +12,7 @@ export function activeDay(
     return today;
   }
 
-  const activeSessionHours =
-    differenceInMinutes(now, parseISO(openSession.startedAt)) / 60;
-
-  if (activeSessionHours <= ABANDONED_AFTER_HOURS) {
+  if (!isAbandoned(now, openSession)) {
     return openSession.localDate;
   } else {
     return today;
