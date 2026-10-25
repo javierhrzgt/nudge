@@ -26,3 +26,7 @@ export interface OpenSession {
   startedAt: string;
   localDate: string;
 }
+
+export interface UserSettings extends Settings {
+  timezone: string;
+}

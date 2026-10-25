@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../../lib/supabase";
 import {
   Card,
   Stack,
@@ -12,30 +10,14 @@ import {
   Loader,
 } from "@mantine/core";
 import { calculatePercentage } from "../../lib/progress";
+import { useTasks } from "./useTasks";
 
 interface TareasProps {
   userId: string;
 }
 
 export default function Tareas({ userId }: Readonly<TareasProps>) {
-  const { data, isPending, error } = useQuery({
-    queryKey: ["tasks", userId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("tasks")
-        .select(
-          "id,title,position,goals(id,title,est_minutes,position,completed_on)",
-        )
-        .is("archived_at", null)
-        .is("goals.archived_at", null)
-        .order("position")
-        .order("position", { referencedTable: "goals" });
-
-      if (error) throw new Error(error.message);
-
-      return data;
-    },
-  });
+  const { data, isPending, error } = useTasks(userId);
 
   if (isPending)
     return (
@@ -56,7 +38,7 @@ export default function Tareas({ userId }: Readonly<TareasProps>) {
 
   return (
     <>
-      <Card>
+      <Card withBorder>
         <Stack>
           <Group justify={"space-between"}>
             <Title order={4}>Progreso total</Title>
@@ -70,7 +52,7 @@ export default function Tareas({ userId }: Readonly<TareasProps>) {
         const completed = t.goals.filter((g) => g.completed_on).length;
         const percentage = calculatePercentage({ completed, total });
         return (
-          <Card key={t.id}>
+          <Card key={t.id} withBorder>
             <Stack>
               <Group justify={"space-between"}>
                 <Title order={4}>{t.title}</Title>
