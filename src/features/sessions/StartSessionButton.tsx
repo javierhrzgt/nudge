@@ -12,7 +12,7 @@ interface StartSessionButtonProps {
 export default function StartSessionButton({
   userId,
 }: Readonly<StartSessionButtonProps>) {
-  const [opened, setOpened] = useState(false);
+  const [modalSessionId, setModalSessionId] = useState<string | null>(null);
   const settings = useSettings(userId);
   const openSession = useOpenSession(userId);
   const startSession = useStartSession(userId);
@@ -22,16 +22,20 @@ export default function StartSessionButton({
     return <Text>{(settings.error ?? openSession.error)?.message}</Text>;
   if (!settings.data) return null;
   const timezone = settings.data.timezone;
-  if (openSession.data)
+  const session = openSession.data;
+
+  if (session)
     return (
       <Stack>
         <Text>Sesión en curso</Text>
-        <Button onClick={() => setOpened(true)}>Terminar sesión</Button>
-        {opened && (
+        <Button onClick={() => setModalSessionId(session.id)}>
+          Terminar sesión
+        </Button>
+        {modalSessionId === session.id && (
           <FinishSessionModal
-            session={openSession.data}
+            session={session}
             userId={userId}
-            onClose={() => setOpened(false)}
+            onClose={() => setModalSessionId(null)}
           />
         )}
       </Stack>
