@@ -1,4 +1,4 @@
-import { Button, Container, Stack, Center, Loader, Card } from "@mantine/core";
+import { Button, Container, Stack, Center, Loader } from "@mantine/core";
 import { supabase } from "./lib/supabase";
 import Perfil from "./features/profile/Perfil";
 import Tareas from "./features/tasks/Tareas";
@@ -20,7 +20,7 @@ export default function App() {
       <Stack>
         {!session && <LoginForm />}
         {session && (
-          <Stack>
+          <>
             <Perfil userId={session.user.id} />
             <TodayScreen userId={session.user.id} />
             <Tareas userId={session.user.id} />
@@ -31,7 +31,7 @@ export default function App() {
             >
               Cerrar Sesión
             </Button>
-          </Stack>
+          </>
         )}
       </Stack>
     </Container>
