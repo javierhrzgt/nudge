@@ -16,7 +16,7 @@ export default function SettingsCard({ userId }: Readonly<SettingsProps>) {
     );
   if (error) return <Text>{error.message}</Text>;
   return (
-    <Card>
+    <Card withBorder>
       <Stack>
         <Text>{data.dailyMinutes}</Text>
         <Text>{data.startDate}</Text>

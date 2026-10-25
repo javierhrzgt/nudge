@@ -38,7 +38,7 @@ export default function Tareas({ userId }: Readonly<TareasProps>) {
 
   return (
     <>
-      <Card>
+      <Card withBorder>
         <Stack>
           <Group justify={"space-between"}>
             <Title order={4}>Progreso total</Title>
@@ -52,7 +52,7 @@ export default function Tareas({ userId }: Readonly<TareasProps>) {
         const completed = t.goals.filter((g) => g.completed_on).length;
         const percentage = calculatePercentage({ completed, total });
         return (
-          <Card key={t.id}>
+          <Card key={t.id} withBorder>
             <Stack>
               <Group justify={"space-between"}>
                 <Title order={4}>{t.title}</Title>

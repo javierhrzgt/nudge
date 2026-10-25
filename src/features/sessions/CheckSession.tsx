@@ -16,7 +16,7 @@ export default function CheckSession({ userId }: Readonly<CheckSessionProps>) {
     );
   if (error) return <Text>{error.message}</Text>;
   return (
-    <Card>
+    <Card withBorder>
       <Stack>
         {data ? (
           <>

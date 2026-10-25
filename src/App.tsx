@@ -22,9 +22,7 @@ export default function App() {
         {session && (
           <Stack>
             <Perfil userId={session.user.id} />
-            <Card>
-              <TodayScreen userId={session.user.id} />
-            </Card>
+            <TodayScreen userId={session.user.id} />
             <Tareas userId={session.user.id} />
             <Button
               onClick={() => {
