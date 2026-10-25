@@ -9,6 +9,7 @@ import {
   isAbandoned,
 } from "../../lib/agenda/isAbandoned";
 import DiscardSessionModal from "./DiscardSessionModal";
+import ElapsedTime from "./ElapsedTime";
 
 interface StartSessionButtonProps {
   userId: string;
@@ -41,6 +42,7 @@ export default function StartSessionButton({
         ) : (
           <Text>Sesión en curso</Text>
         )}
+        <ElapsedTime startedAt={session.startedAt} />
         <Group grow>
           {sessionAbandoned && (
             <Button
