@@ -1,4 +1,4 @@
-import { Alert, Button, Loader, Stack, Text } from "@mantine/core";
+import { Alert, Button, Group, Loader, Stack, Text } from "@mantine/core";
 import { useSettings } from "../settings/useSettings";
 import { useOpenSession } from "./useOpenSession";
 import { useStartSession } from "./useStartSession";
@@ -8,6 +8,7 @@ import {
   ABANDONED_AFTER_HOURS,
   isAbandoned,
 } from "../../lib/agenda/isAbandoned";
+import DiscardSessionModal from "./DiscardSessionModal";
 
 interface StartSessionButtonProps {
   userId: string;
@@ -16,7 +17,8 @@ interface StartSessionButtonProps {
 export default function StartSessionButton({
   userId,
 }: Readonly<StartSessionButtonProps>) {
-  const [modalSessionId, setModalSessionId] = useState<string | null>(null);
+  const [finishSessionId, setFinishSessionId] = useState<string | null>(null);
+  const [discardSessionId, setDiscardSessionId] = useState<string | null>(null);
   const settings = useSettings(userId);
   const openSession = useOpenSession(userId);
   const startSession = useStartSession(userId);
@@ -39,14 +41,31 @@ export default function StartSessionButton({
         ) : (
           <Text>Sesión en curso</Text>
         )}
-        <Button onClick={() => setModalSessionId(session.id)}>
-          Terminar sesión
-        </Button>
-        {modalSessionId === session.id && (
+        <Group grow>
+          {sessionAbandoned && (
+            <Button
+              variant={"light"}
+              onClick={() => setDiscardSessionId(session.id)}
+            >
+              Descartar sesión
+            </Button>
+          )}
+          <Button onClick={() => setFinishSessionId(session.id)}>
+            Terminar sesión
+          </Button>
+        </Group>
+        {discardSessionId === session.id && (
+          <DiscardSessionModal
+            sessionId={session.id}
+            userId={userId}
+            onClose={() => setDiscardSessionId(null)}
+          />
+        )}
+        {finishSessionId === session.id && (
           <FinishSessionModal
             session={session}
             userId={userId}
-            onClose={() => setModalSessionId(null)}
+            onClose={() => setFinishSessionId(null)}
           />
         )}
       </Stack>
