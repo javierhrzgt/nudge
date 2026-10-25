@@ -65,10 +65,9 @@ export default function Tareas({ userId }: Readonly<TareasProps>) {
                 <Stack gap={"xs"}>
                   {t.goals.map((g) => (
                     <Group key={g.id}>
-                      <Title order={5}>
-                        {g.title} {g.completed_on && <Badge>Hecha</Badge>}
-                      </Title>
+                      <Title order={5}>{g.title}</Title>
                       <Text>{g.est_minutes} min</Text>
+                      {g.completed_on && <Badge>Hecha</Badge>}
                     </Group>
                   ))}
                 </Stack>

@@ -2,6 +2,8 @@ import { Alert, Button, Loader, Stack, Text } from "@mantine/core";
 import { useSettings } from "../settings/useSettings";
 import { useOpenSession } from "./useOpenSession";
 import { useStartSession } from "./useStartSession";
+import { useState } from "react";
+import FinishSessionModal from "./FinishSessionModal";
 
 interface StartSessionButtonProps {
   userId: string;
@@ -10,6 +12,7 @@ interface StartSessionButtonProps {
 export default function StartSessionButton({
   userId,
 }: Readonly<StartSessionButtonProps>) {
+  const [modalSessionId, setModalSessionId] = useState<string | null>(null);
   const settings = useSettings(userId);
   const openSession = useOpenSession(userId);
   const startSession = useStartSession(userId);
@@ -19,7 +22,24 @@ export default function StartSessionButton({
     return <Text>{(settings.error ?? openSession.error)?.message}</Text>;
   if (!settings.data) return null;
   const timezone = settings.data.timezone;
-  if (openSession.data) return <Text>Sesión en curso</Text>;
+  const session = openSession.data;
+
+  if (session)
+    return (
+      <Stack>
+        <Text>Sesión en curso</Text>
+        <Button onClick={() => setModalSessionId(session.id)}>
+          Terminar sesión
+        </Button>
+        {modalSessionId === session.id && (
+          <FinishSessionModal
+            session={session}
+            userId={userId}
+            onClose={() => setModalSessionId(null)}
+          />
+        )}
+      </Stack>
+    );
 
   return (
     <Stack>

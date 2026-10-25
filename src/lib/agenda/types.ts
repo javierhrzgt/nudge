@@ -30,3 +30,7 @@ export interface OpenSession {
 export interface UserSettings extends Settings {
   timezone: string;
 }
+
+export interface StudySession extends OpenSession {
+  id: string;
+}
