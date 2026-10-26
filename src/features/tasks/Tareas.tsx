@@ -8,9 +8,12 @@ import {
   Progress,
   Center,
   Loader,
+  Button,
+  Alert,
 } from "@mantine/core";
 import { calculatePercentage } from "../../lib/progress";
 import { useTasks } from "./useTasks";
+import { useUnsetGoalCompleted } from "./useUnsetGoalCompleted";
 
 interface TareasProps {
   userId: string;
@@ -18,6 +21,7 @@ interface TareasProps {
 
 export default function Tareas({ userId }: Readonly<TareasProps>) {
   const { data, isPending, error } = useTasks(userId);
+  const unsetGoal = useUnsetGoalCompleted(userId);
 
   if (isPending)
     return (
@@ -38,6 +42,7 @@ export default function Tareas({ userId }: Readonly<TareasProps>) {
 
   return (
     <>
+      {unsetGoal.error && <Alert color="red">{unsetGoal.error.message}</Alert>}
       <Card withBorder>
         <Stack>
           <Group justify={"space-between"}>
@@ -64,10 +69,24 @@ export default function Tareas({ userId }: Readonly<TareasProps>) {
               ) : (
                 <Stack gap={"xs"}>
                   {t.goals.map((g) => (
-                    <Group key={g.id}>
-                      <Title order={5}>{g.title}</Title>
-                      <Text>{g.est_minutes} min</Text>
-                      {g.completed_on && <Badge>Hecha</Badge>}
+                    <Group key={g.id} justify={"space-between"}>
+                      <Group>
+                        <Title order={5}>{g.title}</Title>
+                        <Text>{g.est_minutes} min</Text>
+                        {g.completed_on && <Badge>Hecha</Badge>}
+                      </Group>
+                      {g.completed_on && (
+                        <Button
+                          size={"xs"}
+                          variant={"subtle"}
+                          onClick={() => unsetGoal.mutate(g.id)}
+                          loading={
+                            unsetGoal.isPending && unsetGoal.variables === g.id
+                          }
+                        >
+                          Desmarcar
+                        </Button>
+                      )}
                     </Group>
                   ))}
                 </Stack>
