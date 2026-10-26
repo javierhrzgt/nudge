@@ -16,10 +16,12 @@ export default function App() {
         <Loader />
       </Center>
     );
+
+  if (!session) return <LoginForm />;
+
   return (
     <Container size="xs" py="xl">
       <Stack>
-        {!session && <LoginForm />}
         {session && (
           <>
             <Perfil userId={session.user.id} />
