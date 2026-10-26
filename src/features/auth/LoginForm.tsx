@@ -1,5 +1,13 @@
 import { useState, type SubmitEvent } from "react";
-import { Stack, TextInput, PasswordInput, Button, Alert } from "@mantine/core";
+import {
+  Stack,
+  TextInput,
+  PasswordInput,
+  Button,
+  Alert,
+  Title,
+  Center,
+} from "@mantine/core";
 import { supabase } from "../../lib/supabase";
 
 export default function LoginForm() {
@@ -32,26 +40,31 @@ export default function LoginForm() {
     }
   }
   return (
-    <Stack>
-      {errorMsg && <Alert color="red">{errorMsg}</Alert>}
-      <form onSubmit={handleSubmit}>
-        <Stack>
-          <TextInput
-            type="email"
-            placeholder="Correo"
-            value={email}
-            onChange={(e) => setEmail(e.currentTarget.value)}
-          />
-          <PasswordInput
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-          />
-          <Button type="submit" loading={submitting}>
-            Iniciar Sesión
-          </Button>
-        </Stack>
-      </form>
-    </Stack>
+    <Center h={"100dvh"}>
+      <Stack w={{ base: "100%", sm: 400 }} px={"md"}>
+        {errorMsg && <Alert color="red">{errorMsg}</Alert>}
+        <Title order={1} ta={"center"}>
+          Nudge 🤓
+        </Title>
+        <form onSubmit={handleSubmit}>
+          <Stack>
+            <TextInput
+              type="email"
+              placeholder="Correo"
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+            />
+            <PasswordInput
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.currentTarget.value)}
+            />
+            <Button type="submit" loading={submitting}>
+              Iniciar Sesión
+            </Button>
+          </Stack>
+        </form>
+      </Stack>
+    </Center>
   );
 }
