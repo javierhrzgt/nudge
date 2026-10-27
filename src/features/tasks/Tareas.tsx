@@ -71,9 +71,9 @@ export default function Tareas({ userId }: Readonly<TareasProps>) {
                   {t.goals.map((g) => (
                     <Group key={g.id} justify={"space-between"}>
                       <Group>
+                        {g.completed_on && <Badge>Hecha</Badge>}
                         <Title order={5}>{g.title}</Title>
                         <Text>{g.est_minutes} min</Text>
-                        {g.completed_on && <Badge>Hecha</Badge>}
                       </Group>
                       {g.completed_on && (
                         <Button

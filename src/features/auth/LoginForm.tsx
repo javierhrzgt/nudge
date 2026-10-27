@@ -42,10 +42,10 @@ export default function LoginForm() {
   return (
     <Center h={"100dvh"}>
       <Stack w={{ base: "100%", sm: 400 }} px={"md"}>
-        {errorMsg && <Alert color="red">{errorMsg}</Alert>}
         <Title order={1} ta={"center"}>
           Nudge 🤓
         </Title>
+        {errorMsg && <Alert color="red">{errorMsg}</Alert>}
         <form onSubmit={handleSubmit}>
           <Stack>
             <TextInput
