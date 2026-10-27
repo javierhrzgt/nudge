@@ -1,7 +1,8 @@
-import { Card, Loader, Stack, Text, Title } from "@mantine/core";
+import { Alert, Card, Loader, Stack, Text, Title } from "@mantine/core";
 import { useAgenda } from "./useAgenda";
 import { useTasks } from "../tasks/useTasks";
 import DayCard from "./DayCard";
+import { useSetGoalCompleted } from "../tasks/useSetGoalCompleted";
 
 interface TodayScreenProps {
   userId: string;
@@ -11,6 +12,7 @@ export default function TodayScreen({ userId }: Readonly<TodayScreenProps>) {
   const res = useAgenda(userId);
   const tasks = useTasks(userId);
   const taskList = tasks.data ?? [];
+  const setCompleted = useSetGoalCompleted(userId);
 
   if (res.status === "pending") return <Loader />;
   if (res.status === "error") return <Text>{res.error.message}</Text>;
@@ -25,8 +27,20 @@ export default function TodayScreen({ userId }: Readonly<TodayScreenProps>) {
       <Card withBorder>
         <Stack>
           <Title order={3}>Hoy</Title>
+          {setCompleted.error && (
+            <Alert color="red">{setCompleted.error.message}</Alert>
+          )}
           {todayAgenda ? (
-            <DayCard day={todayAgenda} allGoals={allGoals} />
+            <DayCard
+              day={todayAgenda}
+              allGoals={allGoals}
+              onComplete={(goalId) =>
+                setCompleted.mutate({ goalId, date: res.today })
+              }
+              completingGoalId={
+                setCompleted.isPending ? setCompleted.variables?.goalId : null
+              }
+            />
           ) : (
             <Card withBorder>
               <Text>Nada programado para hoy</Text>

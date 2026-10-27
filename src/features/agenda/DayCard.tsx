@@ -1,4 +1,4 @@
-import { Card, Stack, Text } from "@mantine/core";
+import { Card, Checkbox, Stack, Text } from "@mantine/core";
 import type { AgendaDay } from "../../lib/agenda/types";
 
 interface GoalInfo {
@@ -10,9 +10,16 @@ interface GoalInfo {
 interface DayCardProps {
   day: AgendaDay;
   allGoals: GoalInfo[];
+  onComplete?: (goalId: string) => void;
+  completingGoalId?: string | null;
 }
 
-export default function DayCard({ day, allGoals }: Readonly<DayCardProps>) {
+export default function DayCard({
+  day,
+  allGoals,
+  onComplete,
+  completingGoalId,
+}: Readonly<DayCardProps>) {
   return (
     <Card withBorder>
       <Stack gap={"xs"}>
@@ -20,8 +27,16 @@ export default function DayCard({ day, allGoals }: Readonly<DayCardProps>) {
         {day.goalIds.map((id) => {
           const goal = allGoals.find((g) => g.id === id);
           if (!goal) return null;
-          return (
-            <Text key={id}>
+          return onComplete ? (
+            <Checkbox
+              key={goal.id}
+              label={`${goal.title} · ${goal.est_minutes} min`}
+              checked={false}
+              disabled={completingGoalId === goal.id}
+              onChange={() => onComplete(goal.id)}
+            />
+          ) : (
+            <Text key={goal.id}>
               {goal.title} · {goal.est_minutes} min
             </Text>
           );
