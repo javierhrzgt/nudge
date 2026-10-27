@@ -6,6 +6,7 @@ import LoginForm from "./features/auth/LoginForm";
 import { useAuth } from "./features/auth/useAuth";
 import TodayScreen from "./features/agenda/TodayScreen";
 import StartSessionButton from "./features/sessions/StartSessionButton";
+import SettingsScreen from "./features/settings/SettingsScreen";
 
 export default function App() {
   const { session, loading } = useAuth();
@@ -28,6 +29,7 @@ export default function App() {
             <StartSessionButton userId={session.user.id} />
             <TodayScreen userId={session.user.id} />
             <Tareas userId={session.user.id} />
+            <SettingsScreen userId={session.user.id} />
             <Button
               onClick={() => {
                 void supabase.auth.signOut();
