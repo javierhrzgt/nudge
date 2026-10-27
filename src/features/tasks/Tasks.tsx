@@ -15,11 +15,11 @@ import { calculatePercentage } from "../../lib/progress";
 import { useTasks } from "./useTasks";
 import { useUnsetGoalCompleted } from "./useUnsetGoalCompleted";
 
-interface TareasProps {
+interface TasksProps {
   userId: string;
 }
 
-export default function Tareas({ userId }: Readonly<TareasProps>) {
+export default function Tasks({ userId }: Readonly<TasksProps>) {
   const { data, isPending, error } = useTasks(userId);
   const unsetGoal = useUnsetGoalCompleted(userId);
 
