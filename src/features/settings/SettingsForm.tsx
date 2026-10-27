@@ -11,6 +11,8 @@ import type { Settings } from "../../lib/agenda/types";
 import { useState } from "react";
 import { validateSettings } from "../../lib/settings/validateSettings";
 import { useUpdateSettings } from "./useUpdateSettings";
+import { DatePickerInput } from "@mantine/dates";
+import "dayjs/locale/es";
 
 interface SettingsFormProp {
   userId: string;
@@ -35,12 +37,15 @@ export default function SettingsForm({
     () => initial.dailyMinutes,
   );
   const [workDays, setWorkDays] = useState(() => initial.workDays);
+  const [startDate, setStartDate] = useState<string | null>(
+    () => initial.startDate,
+  );
   const updateSettings = useUpdateSettings(userId);
 
   const values: Settings = {
     workDays,
     dailyMinutes: Number(minutes),
-    startDate: initial.startDate,
+    startDate: startDate ?? "",
   };
 
   const errors = validateSettings(values);
@@ -79,6 +84,16 @@ export default function SettingsForm({
           ))}
         </Group>
       </Chip.Group>
+      <DatePickerInput
+        label="Fecha de inicio"
+        locale="es"
+        valueFormat="DD/MM/YYYY"
+        value={startDate}
+        onChange={(date) => {
+          setStartDate(date);
+          updateSettings.reset();
+        }}
+      />
       {updateSettings.error && (
         <Alert color="red">{updateSettings.error.message}</Alert>
       )}
