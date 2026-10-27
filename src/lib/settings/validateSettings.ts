@@ -15,7 +15,7 @@ export function validateSettings(values: Settings): string[] {
   }
 
   if (values.dailyMinutes < 1 || !Number.isInteger(values.dailyMinutes)) {
-    errors.push("Los minutos diarios deben ser un número entero mayor que 0”");
+    errors.push("Los minutos diarios deben ser un número entero mayor que 0");
   }
 
   if (
