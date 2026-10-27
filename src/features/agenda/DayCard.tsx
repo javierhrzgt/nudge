@@ -1,5 +1,6 @@
 import { Card, Checkbox, Stack, Text } from "@mantine/core";
 import type { AgendaDay } from "../../lib/agenda/types";
+import { formatDay } from "../../lib/agenda/formatDay";
 
 interface GoalInfo {
   id: string;
@@ -23,7 +24,7 @@ export default function DayCard({
   return (
     <Card withBorder>
       <Stack gap={"xs"}>
-        <Text>{day.date}</Text>
+        <Text fw={600}>{formatDay(day.date)}</Text>
         {day.goalIds.map((id) => {
           const goal = allGoals.find((g) => g.id === id);
           if (!goal) return null;
