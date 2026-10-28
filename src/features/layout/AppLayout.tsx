@@ -1,4 +1,4 @@
-import { Container, Stack, Button } from "@mantine/core";
+import { Button, AppShell, Group, Container, Stack } from "@mantine/core";
 import { supabase } from "../../lib/supabase";
 import Perfil from "../profile/Perfil";
 import { Outlet } from "react-router";
@@ -9,18 +9,27 @@ interface AppLayoutProps {
 
 export default function AppLayout({ userId }: Readonly<AppLayoutProps>) {
   return (
-    <Container size="xs" py="xl">
-      <Stack>
-        <Perfil userId={userId} />
-        <Outlet />
-        <Button
-          onClick={() => {
-            void supabase.auth.signOut();
-          }}
-        >
-          Cerrar Sesión
-        </Button>
-      </Stack>
-    </Container>
+    <AppShell header={{ height: 60 }} padding="md">
+      <AppShell.Header>
+        <Group justify="space-between" h="100%" px="md">
+          <Perfil userId={userId} />
+          <Button
+            size="xs"
+            onClick={() => {
+              void supabase.auth.signOut();
+            }}
+          >
+            Cerrar Sesión
+          </Button>
+        </Group>
+      </AppShell.Header>
+      <AppShell.Main>
+        <Container size="xs">
+          <Stack>
+            <Outlet />
+          </Stack>
+        </Container>
+      </AppShell.Main>
+    </AppShell>
   );
 }

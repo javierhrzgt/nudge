@@ -1,14 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../lib/supabase";
-import {
-  Text,
-  Stack,
-  Title,
-  Center,
-  Loader,
-  Group,
-  Badge,
-} from "@mantine/core";
+import { Text, Title, Center, Loader, Group, Badge } from "@mantine/core";
 
 interface PerfilProps {
   userId: string;
@@ -38,11 +30,9 @@ export default function Perfil({ userId }: Readonly<PerfilProps>) {
     );
   if (error) return <Text>{error.message}</Text>;
   return (
-    <Stack>
-      <Group>
-        <Title>{data.display_name}</Title>
-        <Badge>{data.role}</Badge>
-      </Group>
-    </Stack>
+    <Group>
+      <Title order={4}>{data.display_name}</Title>
+      <Badge size="xs">{data.role}</Badge>
+    </Group>
   );
 }
