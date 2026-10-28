@@ -13,6 +13,7 @@ export default function MainNav({ items, placement }: Readonly<MainNavProps>) {
   const isFooter = placement === "footer";
   return items.map((item) => (
     <NavLink
+      flex={isFooter ? 1 : undefined}
       w="auto"
       py={isFooter ? undefined : 6}
       px={isFooter ? undefined : "xl"}
