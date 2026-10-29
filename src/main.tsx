@@ -8,6 +8,7 @@ import App from "./App.tsx";
 import AuthProvider from "./features/auth/AuthProvider.tsx";
 import { theme } from "./theme.ts";
 import { BrowserRouter } from "react-router";
+import "dayjs/locale/es";
 
 const queryClient = new QueryClient();
 

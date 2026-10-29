@@ -12,7 +12,6 @@ import { useState } from "react";
 import { validateSettings } from "../../lib/settings/validateSettings";
 import { useUpdateSettings } from "./useUpdateSettings";
 import { DatePickerInput } from "@mantine/dates";
-import "dayjs/locale/es";
 
 interface SettingsFormProp {
   userId: string;

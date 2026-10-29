@@ -7,6 +7,7 @@ import Tasks from "./features/tasks/Tasks";
 import TodayScreen from "./features/agenda/TodayScreen";
 import StartSessionButton from "./features/sessions/StartSessionButton";
 import SettingsScreen from "./features/settings/SettingsScreen";
+import CalendarScreen from "./features/calendar/CalendarScreen";
 
 export default function App() {
   const { session, loading } = useAuth();
@@ -39,6 +40,7 @@ export default function App() {
           path="/settings"
           element={<SettingsScreen userId={session.user.id} />}
         />
+        <Route path="/calendar" element={<CalendarScreen />} />
       </Route>
     </Routes>
   );
