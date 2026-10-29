@@ -343,4 +343,66 @@ describe("generarAgenda", () => {
 
     expect(result).toEqual([{ date: "2026-10-28", goalIds: ["g1", "g2"] }]);
   });
+  it("una meta que no cabe en lo que sobra de hoy pasa al siguiente día", () => {
+    const tasks: Task[] = [
+      makeTask(
+        "t1",
+        [
+          makeGoal("g0", {
+            estMinutes: 25,
+            position: 1,
+            completedOn: "2026-10-28",
+          }),
+          makeGoal("g1", {
+            estMinutes: 30,
+            position: 2,
+            completedOn: "2026-10-28",
+          }),
+          makeGoal("g2", { estMinutes: 20, position: 3 }),
+        ],
+        { position: 1 },
+      ),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-27",
+    };
+
+    const result = generarAgenda(tasks, settings, "2026-10-28");
+
+    expect(result).toEqual([{ date: "2026-10-29", goalIds: ["g2"] }]);
+  });
+  it("una meta cabe en el presupuesto restante de hoy y la siguiente pasa al otro día", () => {
+    const tasks: Task[] = [
+      makeTask(
+        "t1",
+        [
+          makeGoal("g0", {
+            estMinutes: 25,
+            position: 1,
+            completedOn: "2026-10-28",
+          }),
+          makeGoal("g1", {
+            estMinutes: 30,
+            position: 2,
+          }),
+          makeGoal("g2", { estMinutes: 20, position: 3 }),
+        ],
+        { position: 1 },
+      ),
+    ];
+    const settings: Settings = {
+      workDays: [1, 2, 3, 4, 5],
+      dailyMinutes: 60,
+      startDate: "2026-10-27",
+    };
+
+    const result = generarAgenda(tasks, settings, "2026-10-28");
+
+    expect(result).toEqual([
+      { date: "2026-10-28", goalIds: ["g1"] },
+      { date: "2026-10-29", goalIds: ["g2"] },
+    ]);
+  });
 });
