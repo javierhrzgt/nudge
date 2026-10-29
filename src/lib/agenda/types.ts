@@ -34,3 +34,5 @@ export interface UserSettings extends Settings {
 export interface StudySession extends OpenSession {
   id: string;
 }
+
+export type DayMark = "done" | "pending" | "partial";
