@@ -1,31 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { generarAgenda } from "./agenda";
-import type { Goal, Settings, Task } from "./types";
+import type { Settings, Task } from "./types";
+import { makeGoal, makeTask } from "./testHelpers";
 
 const PAST_DAY = "2000-01-01";
-
-function makeGoal(id: string, overrides: Partial<Goal> = {}): Goal {
-  return {
-    id,
-    estMinutes: 30,
-    position: 1,
-    completedOn: null,
-    ...overrides,
-  };
-}
-
-function makeTask(
-  id: string,
-  goals: Goal[],
-  overrides: Partial<Task> = {},
-): Task {
-  return {
-    id,
-    position: 1,
-    goals,
-    ...overrides,
-  };
-}
 
 describe("generarAgenda", () => {
   it("reparte metas de una tarea según los minutos diarios", () => {

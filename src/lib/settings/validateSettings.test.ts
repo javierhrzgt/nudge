@@ -1,15 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { validateSettings } from "./validateSettings";
-import type { Settings } from "../agenda/types";
-
-function makeSettings(overrides: Partial<Settings> = {}): Settings {
-  return {
-    workDays: [1, 3, 5],
-    dailyMinutes: 30,
-    startDate: "2026-10-26",
-    ...overrides,
-  };
-}
+import { makeSettings } from "../agenda/testHelpers";
 
 describe("validateSettings", () => {
   it("valores correctos", () => {
