@@ -1,4 +1,4 @@
-import { Alert, Card, Loader, Stack, Text, Title } from "@mantine/core";
+import { Alert, Card, Center, Loader, Stack, Text, Title } from "@mantine/core";
 import { useAgenda } from "./useAgenda";
 import { useTasks } from "../tasks/useTasks";
 import DayCard from "./DayCard";
@@ -14,7 +14,12 @@ export default function TodayScreen({ userId }: Readonly<TodayScreenProps>) {
   const taskList = tasks.data ?? [];
   const setCompleted = useSetGoalCompleted(userId);
 
-  if (res.status === "pending") return <Loader />;
+  if (res.status === "pending")
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    );
   if (res.status === "error") return <Text>{res.error.message}</Text>;
   if (taskList.length === 0) return <Text>Aún no tienes tareas</Text>;
 
