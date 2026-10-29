@@ -1,9 +1,7 @@
 import { Center, Indicator, Loader, Stack, Text, Title } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useAgenda } from "../agenda/useAgenda";
-import { useTasks } from "../tasks/useTasks";
 import { getDayMarks } from "../../lib/agenda/dayMarks";
-import { mapTasks } from "../tasks/mapTasks";
 import dayjs from "dayjs";
 import type { DayMark } from "../../lib/agenda/types";
 
@@ -21,9 +19,8 @@ export default function CalendarScreen({
   userId,
 }: Readonly<CalendarScreenProps>) {
   const agendaQuery = useAgenda(userId);
-  const tasks = useTasks(userId);
 
-  if (agendaQuery.status === "pending" || tasks.isPending)
+  if (agendaQuery.status === "pending")
     return (
       <Center>
         <Loader />
@@ -32,9 +29,8 @@ export default function CalendarScreen({
 
   if (agendaQuery.status === "error")
     return <Text>{agendaQuery.error.message}</Text>;
-  if (tasks.isError) return <Text>{tasks.error.message}</Text>;
 
-  const allGoals = mapTasks(tasks.data).flatMap((t) => t.goals);
+  const allGoals = agendaQuery.tasks.flatMap((t) => t.goals);
   const marks = getDayMarks(agendaQuery.agenda, allGoals);
 
   return (
