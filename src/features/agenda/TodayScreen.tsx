@@ -3,6 +3,8 @@ import { useAgenda } from "./useAgenda";
 import { useTasks } from "../tasks/useTasks";
 import DayCard from "./DayCard";
 import { useSetGoalCompleted } from "../tasks/useSetGoalCompleted";
+import { mapTasks } from "../tasks/mapTasks";
+import { completedOnDay } from "../../lib/agenda/completedOnDay";
 
 interface TodayScreenProps {
   userId: string;
@@ -23,9 +25,38 @@ export default function TodayScreen({ userId }: Readonly<TodayScreenProps>) {
   if (res.status === "error") return <Text>{res.error.message}</Text>;
   if (taskList.length === 0) return <Text>Aún no tienes tareas</Text>;
 
-  const allGoals = taskList.flatMap((t) => t.goals);
+  const allGoals = mapTasks(taskList).flatMap((t) => t.goals);
   const todayAgenda = res.agenda.find((t) => t.date === res.today);
   const upcoming = res.agenda.filter((t) => t.date !== res.today);
+  const { completed, totalMinutes } = completedOnDay(res.today, allGoals);
+
+  let cardContent;
+  if (todayAgenda) {
+    cardContent = (
+      <DayCard
+        day={todayAgenda}
+        allGoals={allGoals}
+        onComplete={(goalId) =>
+          setCompleted.mutate({ goalId, date: res.today })
+        }
+        completingGoalId={
+          setCompleted.isPending ? setCompleted.variables?.goalId : null
+        }
+      />
+    );
+  } else if (completed > 0) {
+    cardContent = (
+      <Card withBorder>
+        <Text>Cumpliste por hoy · {totalMinutes} min</Text>
+      </Card>
+    );
+  } else {
+    cardContent = (
+      <Card withBorder>
+        <Text>Nada programado para hoy</Text>
+      </Card>
+    );
+  }
 
   return (
     <>
@@ -35,22 +66,7 @@ export default function TodayScreen({ userId }: Readonly<TodayScreenProps>) {
           {setCompleted.error && (
             <Alert color="red">{setCompleted.error.message}</Alert>
           )}
-          {todayAgenda ? (
-            <DayCard
-              day={todayAgenda}
-              allGoals={allGoals}
-              onComplete={(goalId) =>
-                setCompleted.mutate({ goalId, date: res.today })
-              }
-              completingGoalId={
-                setCompleted.isPending ? setCompleted.variables?.goalId : null
-              }
-            />
-          ) : (
-            <Card withBorder>
-              <Text>Nada programado para hoy</Text>
-            </Card>
-          )}
+          {cardContent}
         </Stack>
       </Card>
       <Card withBorder>
