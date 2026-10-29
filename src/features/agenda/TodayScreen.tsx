@@ -1,9 +1,7 @@
 import { Alert, Card, Center, Loader, Stack, Text, Title } from "@mantine/core";
 import { useAgenda } from "./useAgenda";
-import { useTasks } from "../tasks/useTasks";
 import DayCard from "./DayCard";
 import { useSetGoalCompleted } from "../tasks/useSetGoalCompleted";
-import { mapTasks } from "../tasks/mapTasks";
 import { completedOnDay } from "../../lib/agenda/completedOnDay";
 
 interface TodayScreenProps {
@@ -11,24 +9,30 @@ interface TodayScreenProps {
 }
 
 export default function TodayScreen({ userId }: Readonly<TodayScreenProps>) {
-  const res = useAgenda(userId);
-  const tasks = useTasks(userId);
-  const taskList = tasks.data ?? [];
+  const agendaQuery = useAgenda(userId);
   const setCompleted = useSetGoalCompleted(userId);
 
-  if (res.status === "pending")
+  if (agendaQuery.status === "pending")
     return (
       <Center>
         <Loader />
       </Center>
     );
-  if (res.status === "error") return <Text>{res.error.message}</Text>;
-  if (taskList.length === 0) return <Text>Aún no tienes tareas</Text>;
+  if (agendaQuery.status === "error")
+    return <Text>{agendaQuery.error.message}</Text>;
+  if (agendaQuery.tasks.length === 0) return <Text>Aún no tienes tareas</Text>;
 
-  const allGoals = mapTasks(taskList).flatMap((t) => t.goals);
-  const todayAgenda = res.agenda.find((t) => t.date === res.today);
-  const upcoming = res.agenda.filter((t) => t.date !== res.today);
-  const { completed, totalMinutes } = completedOnDay(res.today, allGoals);
+  const allGoals = agendaQuery.tasks.flatMap((t) => t.goals);
+  const todayAgenda = agendaQuery.agenda.find(
+    (t) => t.date === agendaQuery.today,
+  );
+  const upcoming = agendaQuery.agenda.filter(
+    (t) => t.date !== agendaQuery.today,
+  );
+  const { completed, totalMinutes } = completedOnDay(
+    agendaQuery.today,
+    allGoals,
+  );
 
   let cardContent;
   if (todayAgenda) {
@@ -37,7 +41,7 @@ export default function TodayScreen({ userId }: Readonly<TodayScreenProps>) {
         day={todayAgenda}
         allGoals={allGoals}
         onComplete={(goalId) =>
-          setCompleted.mutate({ goalId, date: res.today })
+          setCompleted.mutate({ goalId, date: agendaQuery.today })
         }
         completingGoalId={
           setCompleted.isPending ? setCompleted.variables?.goalId : null

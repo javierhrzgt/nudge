@@ -28,7 +28,9 @@ export function useAgenda(userId: string) {
     settings.data.timezone,
     openSession.data ?? null,
   );
-  const agenda = generarAgenda(mapTasks(tasks.data), settings.data, today);
 
-  return { status: "ready" as const, agenda, today };
+  const mappedTasks = mapTasks(tasks.data);
+  const agenda = generarAgenda(mappedTasks, settings.data, today);
+
+  return { status: "ready" as const, tasks: mappedTasks, agenda, today };
 }
