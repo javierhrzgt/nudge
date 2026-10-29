@@ -1,5 +1,6 @@
 export interface Goal {
   id: string;
+  title: string;
   estMinutes: number;
   position: number;
   completedOn: string | null;

@@ -5,7 +5,7 @@ import { formatDay } from "../../lib/agenda/formatDay";
 interface GoalInfo {
   id: string;
   title: string;
-  est_minutes: number;
+  estMinutes: number;
 }
 
 interface DayCardProps {
@@ -31,14 +31,14 @@ export default function DayCard({
           return onComplete ? (
             <Checkbox
               key={goal.id}
-              label={`${goal.title} · ${goal.est_minutes} min`}
+              label={`${goal.title} · ${goal.estMinutes} min`}
               checked={false}
               disabled={completingGoalId === goal.id}
               onChange={() => onComplete(goal.id)}
             />
           ) : (
             <Text key={goal.id}>
-              {goal.title} · {goal.est_minutes} min
+              {goal.title} · {goal.estMinutes} min
             </Text>
           );
         })}

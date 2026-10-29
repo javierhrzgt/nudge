@@ -3,6 +3,7 @@ import type { Goal, Settings, Task } from "./types";
 export function makeGoal(id: string, overrides: Partial<Goal> = {}): Goal {
   return {
     id,
+    title: id,
     estMinutes: 30,
     position: 1,
     completedOn: null,
