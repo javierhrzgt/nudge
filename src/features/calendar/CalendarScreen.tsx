@@ -60,9 +60,17 @@ export default function CalendarScreen({
         renderDay={(date) => {
           const day = dayjs(date).date();
           const mark = marks[date];
+          console.log(`mark: ${mark}`);
           const color = mark ? markColors[mark] : undefined;
+          const isPendingOnSelected =
+            date === selectedDay && mark === "pending";
           return (
-            <Indicator color={color} size={6} offset={-2} disabled={!mark}>
+            <Indicator
+              color={isPendingOnSelected ? "white" : color}
+              size={6}
+              offset={-4}
+              disabled={!mark}
+            >
               <div>{day}</div>
             </Indicator>
           );
