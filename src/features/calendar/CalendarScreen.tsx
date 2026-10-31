@@ -1,4 +1,13 @@
-import { Center, Indicator, Loader, Stack, Text, Title } from "@mantine/core";
+import {
+  Center,
+  ColorSwatch,
+  Group,
+  Indicator,
+  Loader,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useAgenda } from "../agenda/useAgenda";
 import { getDayMarks } from "../../lib/agenda/dayMarks";
@@ -13,6 +22,14 @@ const markColors: Record<DayMark, string> = {
   pending: "blue",
   partial: "yellow",
 };
+
+const markLabels: Record<DayMark, string> = {
+  pending: "pendiente",
+  partial: "parcial",
+  done: "hecho",
+};
+
+const legendOrder: DayMark[] = ["pending", "partial", "done"];
 
 interface CalendarScreenProps {
   userId: string;
@@ -60,7 +77,6 @@ export default function CalendarScreen({
         renderDay={(date) => {
           const day = dayjs(date).date();
           const mark = marks[date];
-          console.log(`mark: ${mark}`);
           const color = mark ? markColors[mark] : undefined;
           const isPendingOnSelected =
             date === selectedDay && mark === "pending";
@@ -77,6 +93,17 @@ export default function CalendarScreen({
         }}
       />
       <Stack>
+        <Group justify="center">
+          {legendOrder.map((mark) => (
+            <Group key={mark} gap="xs" wrap="nowrap">
+              <ColorSwatch
+                color={`var(--mantine-color-${markColors[mark]}-filled)`}
+                size={10}
+              />
+              <Text size="xs">{markLabels[mark]}</Text>
+            </Group>
+          ))}
+        </Group>
         <Title order={3}>{formatDay(selectedDay)}</Title>
         {selectedDayDetail.goalsCompleted.length === 0 &&
           selectedDayDetail.goalsPending.length === 0 && (
