@@ -16,6 +16,7 @@ import type { DayMark } from "../../lib/agenda/types";
 import { useState } from "react";
 import { dayDetail } from "../../lib/agenda/dayDetail";
 import { formatDay } from "../../lib/agenda/formatDay";
+import GoalCard from "./GoalCard";
 
 const markColors: Record<DayMark, string> = {
   done: "green",
@@ -113,9 +114,12 @@ export default function CalendarScreen({
           <>
             <Title order={4}>Metas pendientes</Title>
             {selectedDayDetail.goalsPending.map((pending) => (
-              <Text key={pending.id}>
-                {pending.title} · {pending.estMinutes} min
-              </Text>
+              <GoalCard
+                key={pending.id}
+                title={pending.title}
+                minutes={pending.estMinutes}
+                color={markColors.pending}
+              />
             ))}
           </>
         )}
@@ -123,9 +127,12 @@ export default function CalendarScreen({
           <>
             <Title order={4}>Metas completadas</Title>
             {selectedDayDetail.goalsCompleted.map((completed) => (
-              <Text key={completed.id}>
-                {completed.title} · {completed.estMinutes} min
-              </Text>
+              <GoalCard
+                key={completed.id}
+                title={completed.title}
+                minutes={completed.estMinutes}
+                color={markColors.done}
+              />
             ))}
           </>
         )}
