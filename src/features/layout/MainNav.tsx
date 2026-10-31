@@ -16,7 +16,7 @@ export default function MainNav({ items, placement }: Readonly<MainNavProps>) {
       flex={isFooter ? 1 : undefined}
       w="auto"
       py={isFooter ? undefined : 6}
-      px={isFooter ? undefined : "xl"}
+      px={isFooter ? undefined : "md"}
       variant={isFooter ? "filled" : "light"}
       style={
         isFooter

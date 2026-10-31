@@ -21,13 +21,14 @@ export default function AppLayout({ userId }: Readonly<AppLayoutProps>) {
       footer={{ height: 60, collapsed: !isMobile }}
     >
       <AppShell.Header>
-        <Group justify="space-between" h="100%" px="md">
+        <Group justify="space-between" h="100%" px="md" wrap="nowrap">
           <Perfil userId={userId} />
           <Group visibleFrom="sm" wrap="nowrap" gap="xs">
             <MainNav items={navItems} placement="header" />
           </Group>
           <Button
             size="xs"
+            flex={"none"}
             onClick={() => {
               void supabase.auth.signOut();
             }}
