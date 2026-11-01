@@ -30,11 +30,11 @@ export default function Perfil({ userId }: Readonly<PerfilProps>) {
     );
   if (error) return <Text>{error.message}</Text>;
   return (
-    <Group gap={"xs"} wrap="nowrap">
-      <Title order={4} miw={0} lineClamp={1}>
+    <Group gap="xs" wrap="nowrap">
+      <Title order={4} miw={0} lineClamp={1} title={data.display_name}>
         {data.display_name}
       </Title>
-      <Badge size="xs" flex={"none"}>
+      <Badge size="xs" flex="none">
         {data.role}
       </Badge>
     </Group>
