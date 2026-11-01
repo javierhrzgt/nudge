@@ -1,5 +1,6 @@
 import type { AgendaDay, Goal, Settings, Task } from "./types";
 import { parseISO, addDays, format, getDay, max } from "date-fns";
+import { completedOnDay } from "./completedOnDay";
 
 function nextWorkDay(from: Date, workDays: number[]): Date {
   let date = from;
@@ -55,12 +56,7 @@ export function generarAgenda(
   const sortedTasks = tasks.toSorted((a, b) => a.position - b.position);
 
   const goals = tasks.flatMap((t) => t.goals);
-  const goalsCompleted = goals.filter((g) => g.completedOn === activeDay);
-
-  const minutesCompleted = goalsCompleted.reduce(
-    (acc, cur) => acc + cur.estMinutes,
-    0,
-  );
+  const { totalMinutes: minutesCompleted } = completedOnDay(activeDay, goals);
 
   let firstDayBudget = cursorIsToday
     ? settings.dailyMinutes - minutesCompleted
