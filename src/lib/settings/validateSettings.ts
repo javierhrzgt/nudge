@@ -14,8 +14,12 @@ export function validateSettings(values: Settings): string[] {
     errors.push("Los días deben estar entre domingo y sábado");
   }
 
-  if (values.dailyMinutes < 1 || !Number.isInteger(values.dailyMinutes)) {
-    errors.push("Los minutos diarios deben ser un número entero mayor que 0");
+  if (
+    !Number.isInteger(values.dailyMinutes) ||
+    values.dailyMinutes < 1 ||
+    values.dailyMinutes > 720
+  ) {
+    errors.push("Los minutos diarios deben ser un número entero entre 1 y 720");
   }
 
   if (

@@ -23,6 +23,14 @@ describe("validateSettings", () => {
     const res = validateSettings(makeSettings({ dailyMinutes: 0 }));
     expect(res).toHaveLength(1);
   });
+  it("dailyMinutes mayor que 720", () => {
+    const res = validateSettings(makeSettings({ dailyMinutes: 721 }));
+    expect(res).toHaveLength(1);
+  });
+  it("dailyMinutes igual que 720 es válido", () => {
+    const res = validateSettings(makeSettings({ dailyMinutes: 720 }));
+    expect(res).toEqual([]);
+  });
   it("dailyMinutes con decimales (por ejemplo 30.5)", () => {
     const res = validateSettings(makeSettings({ dailyMinutes: 30.5 }));
     expect(res).toHaveLength(1);

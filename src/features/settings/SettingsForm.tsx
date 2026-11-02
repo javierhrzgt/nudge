@@ -65,6 +65,7 @@ export default function SettingsForm({
           updateSettings.reset();
         }}
         min={1}
+        max={720}
         allowDecimal={false}
       />
       <Chip.Group
