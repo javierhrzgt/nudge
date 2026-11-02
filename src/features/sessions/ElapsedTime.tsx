@@ -14,5 +14,9 @@ export default function ElapsedTime({ startedAt }: Readonly<ElapsedTimeProps>) {
     }, 1000);
     return () => clearInterval(id);
   }, []);
-  return <Text size={"xl"}>{formatElapsed(now, startedAt)}</Text>;
+  return (
+    <Text ta="center" size={"xl"}>
+      {formatElapsed(now, startedAt)}
+    </Text>
+  );
 }

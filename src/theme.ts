@@ -6,6 +6,7 @@ import {
   NumberInput,
   Button,
 } from "@mantine/core";
+import { DatePickerInput, TimeInput } from "@mantine/dates";
 
 export const theme = createTheme({
   defaultRadius: "md",
@@ -14,5 +15,7 @@ export const theme = createTheme({
     PasswordInput: PasswordInput.extend({ defaultProps: { size: "md" } }),
     NumberInput: NumberInput.extend({ defaultProps: { size: "md" } }),
     Button: Button.extend({ defaultProps: { size: "md" } }),
+    DatePickerInput: DatePickerInput.extend({ defaultProps: { size: "md" } }),
+    TimeInput: TimeInput.extend({ defaultProps: { size: "md" } }),
   },
 });
