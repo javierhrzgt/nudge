@@ -78,7 +78,7 @@ export default function FinishSessionModal({
             value={selectedIds}
             onChange={setSelectedIds}
           >
-            <Stack gap={"xs"}>
+            <Stack gap={"xs"} mt="xs">
               {pending.map((g) => (
                 <Checkbox
                   key={g.id}

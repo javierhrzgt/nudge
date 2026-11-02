@@ -84,6 +84,7 @@ export default function SettingsForm({
         </Group>
       </Chip.Group>
       <DatePickerInput
+        firstDayOfWeek={0}
         label="Fecha de inicio"
         locale="es"
         valueFormat="DD/MM/YYYY"

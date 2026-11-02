@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router";
-import { Center, Loader } from "@mantine/core";
+import { Center, Loader, Stack } from "@mantine/core";
 import { useAuth } from "./features/auth/useAuth";
 import AppLayout from "./features/layout/AppLayout";
 import LoginForm from "./features/auth/LoginForm";
@@ -8,6 +8,7 @@ import TodayScreen from "./features/agenda/TodayScreen";
 import StartSessionButton from "./features/sessions/StartSessionButton";
 import SettingsScreen from "./features/settings/SettingsScreen";
 import CalendarScreen from "./features/calendar/CalendarScreen";
+import ManualSessionButton from "./features/sessions/ManualSessionButton";
 
 export default function App() {
   const { session, loading } = useAuth();
@@ -29,10 +30,11 @@ export default function App() {
         <Route
           path="/today"
           element={
-            <>
+            <Stack>
               <StartSessionButton userId={session.user.id} />
+              <ManualSessionButton />
               <TodayScreen userId={session.user.id} />
-            </>
+            </Stack>
           }
         />
         <Route path="/tasks" element={<Tasks userId={session.user.id} />} />

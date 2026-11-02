@@ -36,11 +36,11 @@ export default function StartSessionButton({
     return (
       <Stack>
         {sessionAbandoned ? (
-          <Alert color={"yellow"}>
+          <Alert color={"yellow"} ta="center">
             Esta sesión lleva abierta más de {ABANDONED_AFTER_HOURS} horas
           </Alert>
         ) : (
-          <Text>Sesión en curso</Text>
+          <Text ta="center">Sesión en curso</Text>
         )}
         <ElapsedTime startedAt={session.startedAt} />
         <Group grow>
