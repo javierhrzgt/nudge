@@ -32,7 +32,7 @@ export default function App() {
           element={
             <Stack>
               <StartSessionButton userId={session.user.id} />
-              <ManualSessionButton />
+              <ManualSessionButton userId={session.user.id} />
               <TodayScreen userId={session.user.id} />
             </Stack>
           }
