@@ -38,11 +38,18 @@ export default function ManualSessionModal({
 
   if (settingsQuery.isPending)
     return (
-      <Center>
-        <Loader />
-      </Center>
+      <Modal opened onClose={onClose} title="Crear sesión manual">
+        <Center>
+          <Loader />
+        </Center>
+      </Modal>
     );
-  if (settingsQuery.isError) return <Text>{settingsQuery.error.message}</Text>;
+  if (settingsQuery.isError)
+    return (
+      <Modal opened onClose={onClose} title="Crear sesión manual">
+        <Text>{settingsQuery.error.message}</Text>
+      </Modal>
+    );
 
   let goalsContent;
   if (agendaQuery.status === "pending") {
