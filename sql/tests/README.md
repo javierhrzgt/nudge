@@ -1,11 +1,11 @@
-# sql/tests · Pruebas de la base de datos
+# sql/tests · Database tests
 
-Ejecutan los archivos `01_tables.sql`, `02_functions.sql` y `03_rls.sql` en un
-**Postgres local en memoria** ([PGlite](https://pglite.dev)) que simula lo que Supabase
-agrega: los roles `anon` / `authenticated`, `auth.users` y `auth.uid()`.
-No tocan tu proyecto de Supabase ni necesitan internet después de instalar.
+They run `01_tables.sql`, `02_functions.sql` and `03_rls.sql` on an **in-memory local
+Postgres** ([PGlite](https://pglite.dev)) that simulates what Supabase adds: the `anon` /
+`authenticated` roles, `auth.users` and `auth.uid()`. They do not touch your Supabase
+project and need no internet after installing.
 
-## Cómo correrlas
+## How to run them
 
 ```bash
 cd sql/tests
@@ -13,40 +13,40 @@ pnpm install
 pnpm test
 ```
 
-Al final imprime `RESULTADO: N ok, 0 fallos`. Si algo falla, muestra el nombre de la prueba.
-Para apuntar a otra carpeta de SQL: `pnpm test ruta/a/sql` (o `node run_tests.mjs ruta/a/sql`).
+At the end it prints `RESULTADO: N ok, 0 fallos`. If something fails, it shows the name of the test.
+To point at another SQL folder: `pnpm test path/to/sql` (or `node run_tests.mjs path/to/sql`).
 
-Agrega `node_modules/` a tu `.gitignore` si todavía no lo tienes.
+Add `node_modules/` to your `.gitignore` if you do not have it yet.
 
-## Qué cubren
+## What they cover
 
-| Grupo | Qué verifica                                                                                               |
-| ----- | ---------------------------------------------------------------------------------------------------------- |
-| A     | Trigger de alta: perfiles, `settings` solo para estudiantes, rol inválido pasa a `student`                 |
-| B     | `anon` no lee ninguna tabla ni ejecuta funciones                                                           |
-| C     | Estudiante: no escribe directo, ve solo lo suyo, validaciones de `settings`, funciones internas bloqueadas |
-| D     | Profesor: edita solo el plan de su estudiante, no toca el progreso, no ve a quien no es suyo               |
-| E     | Las 8 RPC: casos felices, rechazos, atomicidad, fechas, zona horaria, sesiones ajenas                      |
-| F     | Catálogo: permisos de ejecución, escritura por columna y RLS activo en las 7 tablas                        |
+| Group | What it checks                                                                                                 |
+| ----- | -------------------------------------------------------------------------------------------------------------- |
+| A     | Sign-up trigger: profiles, `settings` only for students, an invalid role falls back to `student`               |
+| B     | `anon` reads no table and runs no function                                                                     |
+| C     | Student: no direct writes, sees only their own data, `settings` validations, internal functions blocked        |
+| D     | Teacher: edits only the plan of their own student, cannot touch progress, cannot see someone who is not theirs |
+| E     | The 8 RPCs: happy paths, rejections, atomicity, dates, time zone, other users' sessions                        |
+| F     | Catalog: execute permissions, column-level writes and RLS enabled on the 7 tables                              |
 
-Todo se ejecuta **dos veces**: tras la primera corrida se re-ejecutan `02` y `03` para
-comprobar que son idempotentes y que los permisos quedan igual.
+Everything runs **twice**: after the first pass, `02` and `03` are run again to check that
+they are idempotent and that the permissions end up the same.
 
-## Cómo agregar una prueba
+## How to add a test
 
-Usa `asUser(uid, async (q) => { ... })`: simula a ese usuario (`set local role authenticated`
-
-- `request.jwt.claims`), y cada `q(sql)` corre dentro de un `savepoint`, así un error esperado
-  no aborta el resto. Devuelve `{ ok, rows, n }` o `{ ok: false, msg, code }`.
-  Todo lo que hace `asUser` se revierte al terminar (`rollback`).
+Use `asUser(uid, async (q) => { ... })`: it simulates that user (`set local role authenticated`
+plus `request.jwt.claims`), and each `q(sql)` runs inside a `savepoint`, so an expected error
+does not abort the rest. It returns `{ ok, rows, n }` or `{ ok: false, msg, code }`.
+Everything `asUser` does is rolled back when it finishes.
 
 ```js
 const r = await q(`select set_goal_completed('${g1}', ${TODAY})`);
-check("mi prueba", r.ok);
+check("my test", r.ok);
 ```
 
-## Limitaciones
+## Limitations
 
-PGlite no es Supabase: simula los roles y `auth.uid()`, pero no cubre PostgREST, el JWT real,
-ni los permisos por defecto de tu proyecto. Úsalas como red de seguridad al cambiar el SQL,
-y repite las pruebas críticas en Supabase real antes de dar algo por cerrado.
+PGlite is not Supabase: it simulates the roles and `auth.uid()`, but it does not cover
+PostgREST, the real JWT, or your project's default permissions. Use these tests as a safety
+net when changing the SQL, and repeat the critical ones on a real Supabase project before
+considering something done.
