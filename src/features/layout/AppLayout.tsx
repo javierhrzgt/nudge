@@ -1,10 +1,10 @@
 import { Button, AppShell, Group, Container, Stack } from "@mantine/core";
 import { supabase } from "../../lib/supabase";
-import Perfil from "../profile/Perfil";
 import { Outlet } from "react-router";
 import { navItems } from "./navItems";
 import { useMediaQuery } from "@mantine/hooks";
 import MainNav from "./MainNav";
+import Profile from "../profile/Profile";
 
 interface AppLayoutProps {
   userId: string;
@@ -22,7 +22,7 @@ export default function AppLayout({ userId }: Readonly<AppLayoutProps>) {
     >
       <AppShell.Header>
         <Group justify="space-between" h="100%" px="md" wrap="nowrap">
-          <Perfil userId={userId} />
+          <Profile userId={userId} />
           <Group visibleFrom="sm" wrap="nowrap" gap="xs">
             <MainNav items={navItems} placement="header" />
           </Group>

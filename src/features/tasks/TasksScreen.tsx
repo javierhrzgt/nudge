@@ -11,15 +11,15 @@ import {
   Button,
   Alert,
 } from "@mantine/core";
-import { calculatePercentage } from "../../lib/progress";
+import { calculatePercentage } from "../../lib/progress/calculatePercentage";
 import { useTasks } from "./useTasks";
 import { useUnsetGoalCompleted } from "./useUnsetGoalCompleted";
 
-interface TasksProps {
+interface TasksScreenProps {
   userId: string;
 }
 
-export default function Tasks({ userId }: Readonly<TasksProps>) {
+export default function TasksScreen({ userId }: Readonly<TasksScreenProps>) {
   const { data, isPending, error } = useTasks(userId);
   const unsetGoal = useUnsetGoalCompleted(userId);
 
