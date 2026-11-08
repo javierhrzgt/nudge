@@ -3,12 +3,12 @@ import { Center, Loader, Stack } from "@mantine/core";
 import { useAuth } from "./features/auth/useAuth";
 import AppLayout from "./features/layout/AppLayout";
 import LoginForm from "./features/auth/LoginForm";
-import Tasks from "./features/tasks/Tasks";
 import TodayScreen from "./features/agenda/TodayScreen";
 import StartSessionButton from "./features/sessions/StartSessionButton";
 import SettingsScreen from "./features/settings/SettingsScreen";
 import CalendarScreen from "./features/calendar/CalendarScreen";
 import ManualSessionButton from "./features/sessions/ManualSessionButton";
+import TasksScreen from "./features/tasks/TasksScreen";
 
 export default function App() {
   const { session, loading } = useAuth();
@@ -37,7 +37,10 @@ export default function App() {
             </Stack>
           }
         />
-        <Route path="/tasks" element={<Tasks userId={session.user.id} />} />
+        <Route
+          path="/tasks"
+          element={<TasksScreen userId={session.user.id} />}
+        />
         <Route
           path="/settings"
           element={<SettingsScreen userId={session.user.id} />}

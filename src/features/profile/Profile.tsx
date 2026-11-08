@@ -2,11 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../lib/supabase";
 import { Text, Title, Center, Loader, Group, Badge } from "@mantine/core";
 
-interface PerfilProps {
+interface ProfileProps {
   userId: string;
 }
 
-export default function Perfil({ userId }: Readonly<PerfilProps>) {
+export default function Profile({ userId }: Readonly<ProfileProps>) {
   const { data, isPending, error } = useQuery({
     queryKey: ["profile", userId],
     queryFn: async () => {
