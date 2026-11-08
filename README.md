@@ -72,6 +72,17 @@ pnpm install
 pnpm test
 ```
 
+### Database types
+
+`src/lib/database.types.ts` is generated from the database schema and gives the Supabase client its types, so a wrong RPC name or parameter fails at compile time. Do not edit it by hand. Regenerate it every time you change `sql/`:
+
+```bash
+supabase login # only the first time
+supabase gen types typescript --project-id <project-ref> --schema public > src/lib/database.types.ts
+```
+
+`<project-ref>` is the part of `VITE_SUPABASE_URL` before `.supabase.co`. This needs the [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) (on macOS: `brew install supabase/tap/supabase`). If the command fails, restore the file with `git restore src/lib/database.types.ts`.
+
 ## Scripts
 
 - `pnpm dev`: Starts the dev server.
@@ -82,7 +93,7 @@ pnpm test
 
 ## Project structure
 
-- `src/lib/`: pure functions (agenda generation, validations, date helpers), each with a unit test next to it (`*.test.ts`). It also holds the Supabase client (`supabase.ts`).
+- `src/lib/`: pure functions (agenda generation, validations, date helpers), each with a unit test next to it (`*.test.ts`). It also holds the Supabase client (`supabase.ts`) and its generated types (`database.types.ts`).
 - `src/features/`: screens, components and data hooks, grouped by feature (`agenda`, `calendar`, `sessions`, `settings`, `tasks`, `auth`, `layout`, `profile`).
 - `sql/`: database schema, functions and security policies, plus their own tests (see below).
 
