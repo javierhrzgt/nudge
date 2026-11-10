@@ -9,6 +9,7 @@ import SettingsScreen from "./features/settings/SettingsScreen";
 import CalendarScreen from "./features/calendar/CalendarScreen";
 import ManualSessionButton from "./features/sessions/ManualSessionButton";
 import TasksScreen from "./features/tasks/TasksScreen";
+import StatsScreen from "./features/stats/StatsScreen";
 
 export default function App() {
   const { session, loading } = useAuth();
@@ -42,12 +43,13 @@ export default function App() {
           element={<TasksScreen userId={session.user.id} />}
         />
         <Route
-          path="/settings"
-          element={<SettingsScreen userId={session.user.id} />}
-        />
-        <Route
           path="/calendar"
           element={<CalendarScreen userId={session.user.id} />}
+        />
+        <Route path="/stats" element={<StatsScreen />} />
+        <Route
+          path="/settings"
+          element={<SettingsScreen userId={session.user.id} />}
         />
       </Route>
     </Routes>
