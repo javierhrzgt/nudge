@@ -1,6 +1,11 @@
 import { Tabs, Text } from "@mantine/core";
+import SummaryTab from "./SummaryTab";
 
-export default function StatsScreen() {
+interface StatsScreenProps {
+  userId: string;
+}
+
+export default function StatsScreen({ userId }: Readonly<StatsScreenProps>) {
   return (
     <Tabs defaultValue="summary">
       <Tabs.List>
@@ -8,7 +13,7 @@ export default function StatsScreen() {
         <Tabs.Tab value="history">Historial</Tabs.Tab>
       </Tabs.List>
       <Tabs.Panel value="summary">
-        <Text>Este es el resumen (pendiente)</Text>
+        <SummaryTab userId={userId} />
       </Tabs.Panel>
       <Tabs.Panel value="history">
         <Text>Este es el historial (pendiente)</Text>
