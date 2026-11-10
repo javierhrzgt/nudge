@@ -15,3 +15,8 @@ export interface ClosedSession {
   durationMinutes: number;
   goals: SessionGoal[];
 }
+
+export interface Totals {
+  realMinutes: number;
+  estimatedMinutes: number;
+}
