@@ -7,5 +7,6 @@ export const navItems: NavItemsParams[] = [
   { to: "/today", label: "Hoy" },
   { to: "/tasks", label: "Tareas" },
   { to: "/calendar", label: "Calendario" },
+  { to: "/stats", label: "Estadísticas" },
   { to: "/settings", label: "Ajustes" },
 ];
