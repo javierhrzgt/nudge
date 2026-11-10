@@ -46,7 +46,10 @@ export default function App() {
           path="/calendar"
           element={<CalendarScreen userId={session.user.id} />}
         />
-        <Route path="/stats" element={<StatsScreen />} />
+        <Route
+          path="/stats"
+          element={<StatsScreen userId={session.user.id} />}
+        />
         <Route
           path="/settings"
           element={<SettingsScreen userId={session.user.id} />}
