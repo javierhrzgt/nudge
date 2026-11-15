@@ -138,6 +138,7 @@ export default function ManualSessionModal({
           valueFormat="DD/MM/YYYY"
           value={sessionDate}
           onChange={setSessionDate}
+          highlightToday
         />
         <TimeInput
           label="Hora de inicio"
