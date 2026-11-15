@@ -22,3 +22,8 @@ export interface Totals {
 }
 
 export type PaceStatus = "faster" | "slower" | "on-track";
+
+export interface DayMinutes {
+  date: string;
+  minutes: number;
+}

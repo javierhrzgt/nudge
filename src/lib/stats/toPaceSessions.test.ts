@@ -1,33 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { toPaceSessions } from "./toPaceSessions";
-import type { ClosedSession, SessionGoal } from "./types";
-
-function makeClosedSession(
-  id: string,
-  goals: SessionGoal[],
-  overrides: Partial<ClosedSession> = {},
-): ClosedSession {
-  return {
-    id,
-    startedAt: "2026-11-08T00:00:00Z",
-    localDate: "2026-11-07",
-    durationMinutes: 10,
-    goals,
-    ...overrides,
-  };
-}
-
-function makeGoal(
-  id: string,
-  overrides: Partial<SessionGoal> = {},
-): SessionGoal {
-  return {
-    id,
-    title: id,
-    estMinutes: 10,
-    ...overrides,
-  };
-}
+import type { ClosedSession } from "./types";
+import { makeClosedSession, makeGoal } from "./testHelpers";
 
 describe("toPaceSessions", () => {
   it("los minutos estimados de cada sesión son la suma de los estMinutes de sus metas", () => {

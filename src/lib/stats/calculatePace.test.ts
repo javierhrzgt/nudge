@@ -1,14 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { calculatePace } from "./calculatePace";
 import type { PaceSession } from "./types";
-
-function makeSession(overrides: Partial<PaceSession> = {}): PaceSession {
-  return {
-    durationMinutes: 10,
-    estimatedMinutes: 10,
-    ...overrides,
-  };
-}
+import { makeSession } from "./testHelpers";
 
 describe("calculatePace", () => {
   it("sin sesiones devuelve null", () => {
