@@ -1,5 +1,6 @@
 import { Alert, Center, Loader, Stack, Text } from "@mantine/core";
 import { useSessions } from "../sessions/useSessions";
+import { formatDay } from "../../lib/agenda/formatDay";
 
 interface HistoryTabProps {
   userId: string;
@@ -31,11 +32,14 @@ export default function HistoryTab({ userId }: Readonly<HistoryTabProps>) {
     );
 
   return (
-    <Stack mt="md">
+    <Stack mt="md" gap="lg">
       {sessionsQuery.data.map((session) => (
-        <Text key={session.id}>
-          {session.localDate} {session.durationMinutes} min
-        </Text>
+        <Stack key={session.id} gap={2}>
+          <Text fw={700}>{formatDay(session.localDate)}</Text>
+          <Text size="sm" c="dimmed">
+            {session.durationMinutes} min
+          </Text>
+        </Stack>
       ))}
     </Stack>
   );
