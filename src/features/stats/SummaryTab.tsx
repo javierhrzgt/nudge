@@ -1,4 +1,6 @@
 import { Alert, Center, Loader, Stack, Text } from "@mantine/core";
+import { BarChart } from "@mantine/charts";
+import { groupByDay } from "../../lib/stats/groupByDay";
 import { useSessions } from "../sessions/useSessions";
 import { toPaceSessions } from "../../lib/stats/toPaceSessions";
 import { calculateTotals } from "../../lib/stats/calculateTotals";
@@ -12,7 +14,7 @@ interface SummaryTabProps {
 
 const paceLabels: Record<PaceStatus, string> = {
   "on-track": "vas según lo estimado",
-  slower: "tardas mas de lo estimado",
+  slower: "tardas más de lo estimado",
   faster: "tardas menos de lo estimado",
 };
 
@@ -48,12 +50,20 @@ export default function SummaryTab({ userId }: Readonly<SummaryTabProps>) {
       ? "sin datos (ninguna sesión tiene metas)"
       : `${pace.toFixed(2)} (${paceLabels[classifyPace(pace)]})`;
 
+  const days = groupByDay(sessionsQuery.data);
+
   return (
     <Stack mt="md">
       <Text>Tiempo real: {totals.realMinutes} min</Text>
       <Text>Tiempo estimado: {totals.estimatedMinutes} min</Text>
       <Text>Sesiones cerradas: {sessionsQuery.data.length}</Text>
       <Text>Ritmo: {paceText}</Text>
+      <BarChart
+        h={250}
+        data={days}
+        dataKey="date"
+        series={[{ name: "minutes", label: "Minutos", color: "blue.6" }]}
+      />
     </Stack>
   );
 }
