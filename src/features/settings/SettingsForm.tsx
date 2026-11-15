@@ -94,6 +94,7 @@ export default function SettingsForm({
           setStartDate(date);
           updateSettings.reset();
         }}
+        highlightToday
       />
       {updateSettings.error && (
         <Alert color="red">{updateSettings.error.message}</Alert>
