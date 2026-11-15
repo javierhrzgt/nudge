@@ -39,6 +39,19 @@ export default function HistoryTab({ userId }: Readonly<HistoryTabProps>) {
           <Text size="sm" c="dimmed">
             {session.durationMinutes} min
           </Text>
+          <Stack gap={2} mt="sm">
+            {session.goals.length === 0 ? (
+              <Text size="sm" c="dimmed">
+                sin metas
+              </Text>
+            ) : (
+              session.goals.map((goal) => (
+                <Text key={goal.id}>
+                  {goal.title} · {goal.estMinutes} min
+                </Text>
+              ))
+            )}
+          </Stack>
         </Stack>
       ))}
     </Stack>
