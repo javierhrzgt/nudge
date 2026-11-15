@@ -1,5 +1,6 @@
-import { Tabs, Text } from "@mantine/core";
+import { Tabs } from "@mantine/core";
 import SummaryTab from "./SummaryTab";
+import HistoryTab from "./HistoryTab";
 
 interface StatsScreenProps {
   userId: string;
@@ -16,7 +17,7 @@ export default function StatsScreen({ userId }: Readonly<StatsScreenProps>) {
         <SummaryTab userId={userId} />
       </Tabs.Panel>
       <Tabs.Panel value="history">
-        <Text>Este es el historial (pendiente)</Text>
+        <HistoryTab userId={userId} />
       </Tabs.Panel>
     </Tabs>
   );
