@@ -3,10 +3,19 @@ import { useSessions } from "../sessions/useSessions";
 import { toPaceSessions } from "../../lib/stats/toPaceSessions";
 import { calculateTotals } from "../../lib/stats/calculateTotals";
 import { calculatePace } from "../../lib/stats/calculatePace";
+import { classifyPace } from "../../lib/stats/classifyPace";
+import type { PaceStatus } from "../../lib/stats/types";
 
 interface SummaryTabProps {
   userId: string;
 }
+
+const paceLabels: Record<PaceStatus, string> = {
+  "on-track": "vas según lo estimado",
+  slower: "tardas mas de lo estimado",
+  faster: "tardas menos de lo estimado",
+};
+
 export default function SummaryTab({ userId }: Readonly<SummaryTabProps>) {
   const sessionsQuery = useSessions(userId);
   if (sessionsQuery.isPending)
@@ -35,7 +44,9 @@ export default function SummaryTab({ userId }: Readonly<SummaryTabProps>) {
   const pace = calculatePace(paceSessions);
 
   const paceText =
-    pace === null ? "sin datos (ninguna sesión tiene metas)" : pace.toFixed(2);
+    pace === null
+      ? "sin datos (ninguna sesión tiene metas)"
+      : `${pace.toFixed(2)} (${paceLabels[classifyPace(pace)]})`;
 
   return (
     <Stack mt="md">
