@@ -20,3 +20,5 @@ export interface Totals {
   realMinutes: number;
   estimatedMinutes: number;
 }
+
+export type PaceStatus = "faster" | "slower" | "on-track";
