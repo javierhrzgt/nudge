@@ -1,4 +1,4 @@
-import { Alert, Center, Loader, Stack, Text } from "@mantine/core";
+import { Alert, Center, Loader, Paper, Stack, Text } from "@mantine/core";
 import { BarChart } from "@mantine/charts";
 import { groupByDay } from "../../lib/stats/groupByDay";
 import { useSessions } from "../sessions/useSessions";
@@ -7,6 +7,8 @@ import { calculateTotals } from "../../lib/stats/calculateTotals";
 import { calculatePace } from "../../lib/stats/calculatePace";
 import { classifyPace } from "../../lib/stats/classifyPace";
 import type { PaceStatus } from "../../lib/stats/types";
+import { formatShortDay } from "../../lib/agenda/formatShortDay";
+import { formatDay } from "../../lib/agenda/formatDay";
 
 interface SummaryTabProps {
   userId: string;
@@ -58,12 +60,21 @@ export default function SummaryTab({ userId }: Readonly<SummaryTabProps>) {
       <Text>Tiempo estimado: {totals.estimatedMinutes} min</Text>
       <Text>Sesiones cerradas: {sessionsQuery.data.length}</Text>
       <Text>Ritmo: {paceText}</Text>
-      <BarChart
-        h={250}
-        data={days}
-        dataKey="date"
-        series={[{ name: "minutes", label: "Minutos", color: "blue.6" }]}
-      />
+      <Paper withBorder p="md" radius="md">
+        <Text fw={700}>Minutos por día</Text>
+        <BarChart
+          mt="xl"
+          h={250}
+          data={days}
+          dataKey="date"
+          series={[{ name: "minutes", label: "Minutos", color: "blue.6" }]}
+          xAxisProps={{ tickFormatter: (date) => formatShortDay(date) }}
+          tooltipProps={{
+            labelFormatter: (date) =>
+              typeof date === "string" ? formatDay(date) : date,
+          }}
+        />
+      </Paper>
     </Stack>
   );
 }
