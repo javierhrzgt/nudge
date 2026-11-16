@@ -1,4 +1,13 @@
-import { Alert, Center, Loader, Stack, Text } from "@mantine/core";
+import {
+  Alert,
+  Center,
+  CheckIcon,
+  List,
+  Loader,
+  Stack,
+  Text,
+  ThemeIcon,
+} from "@mantine/core";
 import { useSessions } from "../sessions/useSessions";
 import { formatDay } from "../../lib/agenda/formatDay";
 
@@ -39,19 +48,28 @@ export default function HistoryTab({ userId }: Readonly<HistoryTabProps>) {
           <Text size="sm" c="dimmed">
             {session.durationMinutes} min
           </Text>
-          <Stack gap={2} mt="sm">
-            {session.goals.length === 0 ? (
-              <Text size="sm" c="dimmed">
-                sin metas
-              </Text>
-            ) : (
-              session.goals.map((goal) => (
-                <Text key={goal.id}>
+          {session.goals.length === 0 ? (
+            <Text size="sm" c="dimmed" mt="sm">
+              sin metas
+            </Text>
+          ) : (
+            <List
+              spacing={2}
+              mt="sm"
+              withPadding
+              icon={
+                <ThemeIcon color="blue.6" size={16} radius="xl">
+                  <CheckIcon size={8} />
+                </ThemeIcon>
+              }
+            >
+              {session.goals.map((goal) => (
+                <List.Item key={goal.id}>
                   {goal.title} · {goal.estMinutes} min
-                </Text>
-              ))
-            )}
-          </Stack>
+                </List.Item>
+              ))}
+            </List>
+          )}
         </Stack>
       ))}
     </Stack>
