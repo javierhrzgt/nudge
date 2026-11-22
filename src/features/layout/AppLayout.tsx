@@ -1,16 +1,17 @@
 import { Button, AppShell, Group, Container, Stack } from "@mantine/core";
 import { supabase } from "../../lib/supabase";
 import { Outlet } from "react-router";
-import { navItems } from "./navItems";
 import { useMediaQuery } from "@mantine/hooks";
 import MainNav from "./MainNav";
 import Profile from "../profile/Profile";
+import type { NavItemsParams } from "./navItems";
 
 interface AppLayoutProps {
   userId: string;
+  items: NavItemsParams[];
 }
 
-export default function AppLayout({ userId }: Readonly<AppLayoutProps>) {
+export default function AppLayout({ userId, items }: Readonly<AppLayoutProps>) {
   const isMobile = useMediaQuery("(max-width:47.99em)", true, {
     getInitialValueInEffect: false,
   });
@@ -24,7 +25,7 @@ export default function AppLayout({ userId }: Readonly<AppLayoutProps>) {
         <Group justify="space-between" h="100%" px="md" wrap="nowrap">
           <Profile userId={userId} />
           <Group visibleFrom="sm" wrap="nowrap" gap="xs">
-            <MainNav items={navItems} placement="header" />
+            <MainNav items={items} placement="header" />
           </Group>
           <Button
             size="xs"
@@ -46,7 +47,7 @@ export default function AppLayout({ userId }: Readonly<AppLayoutProps>) {
       </AppShell.Main>
       <AppShell.Footer>
         <Group grow h={"100%"} px="xs" gap="xs">
-          <MainNav items={navItems} placement="footer" />
+          <MainNav items={items} placement="footer" />
         </Group>
       </AppShell.Footer>
     </AppShell>
