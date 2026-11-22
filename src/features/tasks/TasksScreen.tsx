@@ -17,9 +17,13 @@ import { useUnsetGoalCompleted } from "./useUnsetGoalCompleted";
 
 interface TasksScreenProps {
   userId: string;
+  readOnly?: boolean;
 }
 
-export default function TasksScreen({ userId }: Readonly<TasksScreenProps>) {
+export default function TasksScreen({
+  userId,
+  readOnly = false,
+}: Readonly<TasksScreenProps>) {
   const { data, isPending, error } = useTasks(userId);
   const unsetGoal = useUnsetGoalCompleted(userId);
 
@@ -41,7 +45,7 @@ export default function TasksScreen({ userId }: Readonly<TasksScreenProps>) {
   });
 
   return (
-    <>
+    <Stack>
       {unsetGoal.error && <Alert color="red">{unsetGoal.error.message}</Alert>}
       <Card withBorder>
         <Stack>
@@ -75,7 +79,7 @@ export default function TasksScreen({ userId }: Readonly<TasksScreenProps>) {
                         <Title order={5}>{g.title}</Title>
                         <Text>{g.est_minutes} min</Text>
                       </Group>
-                      {g.completed_on && (
+                      {g.completed_on && !readOnly && (
                         <Button
                           size={"xs"}
                           variant={"subtle"}
@@ -95,6 +99,6 @@ export default function TasksScreen({ userId }: Readonly<TasksScreenProps>) {
           </Card>
         );
       })}
-    </>
+    </Stack>
   );
 }

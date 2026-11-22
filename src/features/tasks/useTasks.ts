@@ -12,6 +12,7 @@ export function useTasks(userId: string) {
         )
         .is("archived_at", null)
         .is("goals.archived_at", null)
+        .eq("student_id", userId)
         .order("position")
         .order("position", { referencedTable: "goals" });
 
