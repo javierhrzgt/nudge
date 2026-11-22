@@ -3,10 +3,14 @@ export interface NavItemsParams {
   label: string;
 }
 
-export const navItems: NavItemsParams[] = [
+export const studentNavItems: NavItemsParams[] = [
   { to: "/today", label: "Hoy" },
   { to: "/tasks", label: "Tareas" },
   { to: "/calendar", label: "Calendario" },
   { to: "/stats", label: "Estadísticas" },
   { to: "/settings", label: "Ajustes" },
+];
+
+export const teacherNavItems: NavItemsParams[] = [
+  { to: "/students", label: "Estudiantes" },
 ];

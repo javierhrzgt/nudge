@@ -1,41 +1,34 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../../lib/supabase";
 import { Text, Title, Center, Loader, Group, Badge } from "@mantine/core";
+import { useProfile } from "./useProfile";
 
 interface ProfileProps {
   userId: string;
 }
 
 export default function Profile({ userId }: Readonly<ProfileProps>) {
-  const { data, isPending, error } = useQuery({
-    queryKey: ["profile", userId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("display_name,role")
-        .eq("id", userId)
-        .single();
+  const profileQuery = useProfile(userId);
 
-      if (error) throw new Error(error.message);
-
-      return data;
-    },
-  });
-
-  if (isPending)
+  if (profileQuery.isPending)
     return (
       <Center>
         <Loader />
       </Center>
     );
-  if (error) return <Text>{error.message}</Text>;
+  if (profileQuery.isError)
+    return <Text ta="center">{profileQuery.error.message}</Text>;
+
   return (
     <Group gap="xs" wrap="nowrap">
-      <Title order={4} miw={0} lineClamp={1} title={data.display_name}>
-        {data.display_name}
+      <Title
+        order={4}
+        miw={0}
+        lineClamp={1}
+        title={profileQuery.data.displayName}
+      >
+        {profileQuery.data.displayName}
       </Title>
       <Badge size="xs" flex="none">
-        {data.role}
+        {profileQuery.data.role}
       </Badge>
     </Group>
   );
