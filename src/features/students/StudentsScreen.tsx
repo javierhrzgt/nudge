@@ -1,5 +1,6 @@
 import { Alert, Center, Loader, Paper, Stack, Text } from "@mantine/core";
 import { useStudents } from "./useStudents";
+import { Link } from "react-router";
 
 interface StudentsScreenProps {
   userId: string;
@@ -30,7 +31,15 @@ export default function StudentsScreen({
   return (
     <Stack>
       {studentsQuery.data.map((student) => (
-        <Paper withBorder p="md" radius="md" key={student.studentId}>
+        <Paper
+          withBorder
+          p="md"
+          radius="md"
+          c="var(--mantine-color-text)"
+          key={student.studentId}
+          component={Link}
+          to={`/students/${student.studentId}`}
+        >
           <Text>{student.displayName}</Text>
         </Paper>
       ))}
