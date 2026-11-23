@@ -1,5 +1,6 @@
 import { isValid, parseISO } from "date-fns";
 import type { Settings } from "../agenda/types";
+import { MAX_DAILY_MINUTES } from "../limits";
 
 export function validateSettings(values: Settings): string[] {
   const errors: string[] = [];
@@ -17,9 +18,11 @@ export function validateSettings(values: Settings): string[] {
   if (
     !Number.isInteger(values.dailyMinutes) ||
     values.dailyMinutes < 1 ||
-    values.dailyMinutes > 720
+    values.dailyMinutes > MAX_DAILY_MINUTES
   ) {
-    errors.push("Los minutos diarios deben ser un número entero entre 1 y 720");
+    errors.push(
+      `Los minutos diarios deben ser un número entero entre 1 y ${MAX_DAILY_MINUTES}`,
+    );
   }
 
   if (

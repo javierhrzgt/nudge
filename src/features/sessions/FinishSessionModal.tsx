@@ -14,14 +14,13 @@ import { differenceInMinutes, parseISO } from "date-fns";
 import { useFinishSession } from "./useFinishSession";
 import { useAgenda } from "../agenda/useAgenda";
 import { useTasks } from "../tasks/useTasks";
+import { MAX_SESSION_MINUTES } from "../../lib/limits";
 
 interface ModalProps {
   session: StudySession;
   userId: string;
   onClose: () => void;
 }
-
-const MAX_DURATION_MINUTES = 1440;
 
 export default function FinishSessionModal({
   session,
@@ -30,14 +29,14 @@ export default function FinishSessionModal({
 }: Readonly<ModalProps>) {
   const [duration, setDuration] = useState<number | string>(() =>
     Math.min(
-      MAX_DURATION_MINUTES,
+      MAX_SESSION_MINUTES,
       Math.max(1, differenceInMinutes(new Date(), parseISO(session.startedAt))),
     ),
   );
   const isValid =
     typeof duration === "number" &&
     duration >= 1 &&
-    duration <= MAX_DURATION_MINUTES;
+    duration <= MAX_SESSION_MINUTES;
   const finishSession = useFinishSession(userId);
   const tasksQuery = useTasks(userId);
   const agendaResult = useAgenda(userId);
@@ -67,7 +66,7 @@ export default function FinishSessionModal({
           value={duration}
           onChange={setDuration}
           min={1}
-          max={MAX_DURATION_MINUTES}
+          max={MAX_SESSION_MINUTES}
           allowDecimal={false}
         />
         {pending.length === 0 ? (

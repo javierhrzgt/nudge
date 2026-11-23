@@ -17,6 +17,7 @@ import { useSettings } from "../settings/useSettings";
 import { buildStartedAt } from "../../lib/sessions/buildStartedAt";
 import { validateManualSession } from "../../lib/sessions/validateManualSession";
 import { useCreateManualSession } from "./useCreateManualSession";
+import { MAX_SESSION_MINUTES } from "../../lib/limits";
 
 interface ManualSessionModalProps {
   userId: string;
@@ -150,7 +151,7 @@ export default function ManualSessionModal({
         <NumberInput
           allowDecimal={false}
           min={1}
-          max={1440}
+          max={MAX_SESSION_MINUTES}
           label="Duración (minutos)"
           value={sessionDuration}
           onChange={(duration) => {

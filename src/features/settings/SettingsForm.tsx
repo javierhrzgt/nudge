@@ -12,6 +12,7 @@ import { useState } from "react";
 import { validateSettings } from "../../lib/settings/validateSettings";
 import { useUpdateSettings } from "./useUpdateSettings";
 import { DatePickerInput } from "@mantine/dates";
+import { MAX_DAILY_MINUTES } from "../../lib/limits";
 
 interface SettingsFormProp {
   userId: string;
@@ -65,7 +66,7 @@ export default function SettingsForm({
           updateSettings.reset();
         }}
         min={1}
-        max={720}
+        max={MAX_DAILY_MINUTES}
         allowDecimal={false}
       />
       <Chip.Group
