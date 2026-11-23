@@ -444,6 +444,28 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function handle_new_user();
 
+-- =====================================================================
+-- BLOQUEA CAMBIAR EL TIEMPO ESTIMADO A UNA META COMPLETADA
+-- =====================================================================
+
+create or replace function block_completed_goal_minutes()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if old.completed_on is not null and new.est_minutes is distinct from old.est_minutes then
+    raise exception 'No se puede cambiar la duracion estimada de una meta completada';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists block_completed_goal_minutes on goals;
+create trigger block_completed_goal_minutes
+  before update of est_minutes on goals
+  for each row execute function block_completed_goal_minutes();
+
 
 -- =====================================================================
 -- 5. PERMISOS DE EJECUCION
@@ -485,3 +507,4 @@ grant execute on function edit_completion_date(uuid, date) to authenticated;
 -- Funciones de trigger: no deben poder llamarse a mano
 revoke execute on function handle_new_user() from public, anon, authenticated;
 revoke execute on function validate_settings_timezone() from public, anon, authenticated;
+revoke execute on function block_completed_goal_minutes() from public, anon, authenticated;

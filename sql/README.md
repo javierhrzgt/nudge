@@ -54,6 +54,9 @@ on conflict do nothing;
 - **Teachers** edit the plan (`title`, `est_minutes`, `position`, `archived_at`) of the
   tasks and goals of their active student; they **cannot** touch `completed_on` or
   `session_id` (enforced by the column-level `grant`) and have no `delete` (rows are archived).
+- **Completed goals keep their `est_minutes`**: a trigger blocks changing it once
+  `completed_on` is set (title and archiving stay editable). `est_minutes` is also capped
+  at 720 by the `goals_est_minutes_max` constraint.
 - **`anon` has no access** to any table or RPC.
 - **Internal** functions (`student_today`, `assert_student`, `check_session_start`,
   trigger functions) cannot be executed from the API.
@@ -100,7 +103,7 @@ your Supabase project. How to run them and what they cover: [`tests/README.md`](
 
 ## To do
 
-- Triggers: block physical deletes and `est_minutes` changes on completed goals.
+- Trigger: block physical deletes.
 - Teacher-student invitation and acceptance (`teacher_students`): rows are created by hand for now.
 - `suggestions` policies (the table is currently closed).
 - `edit_session` is tested with test data, but its cases should be repeated on a real Supabase project.
