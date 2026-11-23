@@ -1,4 +1,5 @@
 import { addMinutes, isAfter } from "date-fns";
+import { MAX_SESSION_MINUTES } from "../limits";
 
 export function validateManualSession(
   startedAt: Date | null,
@@ -16,8 +17,14 @@ export function validateManualSession(
 
   if (duration === null) {
     errors.push("Indica cuántos minutos duró la sesión");
-  } else if (!Number.isInteger(duration) || duration < 1 || duration > 1440) {
-    errors.push("La duración debe ser un número entero entre 1 y 1440 minutos");
+  } else if (
+    !Number.isInteger(duration) ||
+    duration < 1 ||
+    duration > MAX_SESSION_MINUTES
+  ) {
+    errors.push(
+      `La duración debe ser un número entero entre 1 y ${MAX_SESSION_MINUTES} minutos`,
+    );
   }
 
   return errors;
