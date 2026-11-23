@@ -94,6 +94,10 @@ alter table settings drop constraint if exists settings_daily_minutes_max;
 alter table settings add constraint settings_daily_minutes_max
   check (daily_minutes <= 720);
 
+alter table goals drop constraint if exists goals_est_minutes_max;
+alter table goals add constraint goals_est_minutes_max
+  check (est_minutes <= 720);
+
 alter table teacher_students drop constraint if exists teacher_students_not_self;
 alter table teacher_students add constraint teacher_students_not_self
   check (teacher_id <> student_id);

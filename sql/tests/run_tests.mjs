@@ -244,6 +244,42 @@ async function suiteTeacher() {
     r = await q(`update goals set title = 'x' where id = '${g1}'`);
     check('D27 profesor sin vinculo no edita metas', r.ok && r.n === 0);
   });
+
+  // ---- D28-D30: reglas de est_minutes en metas completadas ----
+  // Empezamos como ESTUDIANTE, porque solo un estudiante puede completar una meta.
+  await asUser(S, async (q) => {
+    // 1. El estudiante completa la meta g1 (queda con completed_on = hoy).
+    let r = await q(`select set_goal_completed('${g1}', ${TODAY})`);
+
+    // 2. Cambio de máscara: a partir de aquí auth.uid() es el profesor T.
+    //    (El "true" final hace que dure solo hasta que termine esta transacción.)
+    await q(`select set_config('request.jwt.claims', '{"sub":"${T}"}', true)`);
+
+    // 3. Como profesor, intenta cambiar los minutos estimados de la meta completada.
+    //    Lo correcto es que falle, y que el mensaje diga "completada".
+    r = await q(`update goals set est_minutes = 25 where id = '${g1}'`);
+    check('D28 profesor no cambia est_minutes de meta completada', has(r, 'completada'), JSON.stringify(r));
+
+    // 4. Cambiar el título de la misma meta sí debe funcionar (1 fila modificada).
+    r = await q(`update goals set title = 'otro titulo' where id = '${g1}'`);
+    check('D29 profesor si cambia el title de meta completada', r.ok && r.n === 1, JSON.stringify(r));
+
+    // 5. Archivarla también debe funcionar.
+    r = await q(`update goals set archived_at = now() where id = '${g1}'`);
+    check('D30 profesor si archiva una meta completada', r.ok && r.n === 1, JSON.stringify(r));
+  });
+
+  // ---- D31-D32: tope de 720 minutos al crear una meta ----
+  // Aquí no hace falta cambiar de máscara: el profesor crea metas directamente.
+  await asUser(T, async (q) => {
+    // 720 es el máximo permitido: debe funcionar.
+    let r = await q(`insert into goals (task_id, student_id, title, est_minutes, position) values ('${tS}', '${S}', 'tope', 720, 9)`);
+    check('D31 profesor crea meta con 720 minutos', r.ok, JSON.stringify(r));
+
+    // 721 se pasa del máximo: debe fallar, y el error nombra la restricción.
+    r = await q(`insert into goals (task_id, student_id, title, est_minutes, position) values ('${tS}', '${S}', 'excede', 721, 9)`);
+    check('D32 profesor no crea meta con 721 minutos', has(r, 'goals_est_minutes_max'), JSON.stringify(r));
+  });
 }
 
 async function suiteRPC() {
